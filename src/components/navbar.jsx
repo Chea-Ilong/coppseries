@@ -3,215 +3,109 @@ import { Collapse, Dropdown, initTWE } from "tw-elements";
 import { navItems } from "../Navbar";
 
 const Navbar = () => {
-  // const [isOpen, setIsOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     initTWE({ Collapse, Dropdown });
   }, []);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
-    <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-white py-2 shadow-dark-mild lg:flex-wrap lg:justify-start lg:py-4">
-      <div className="container mx-auto" style={{ maxWidth: "1024px" }}>
-        <div className="flex w-full flex-wrap items-center justify-between px-3">
-          <button
-            className="block border-0 bg-transparent px-2 text-black/50 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 lg:hidden"
-            type="button"
-            data-twe-collapse-init
-            data-twe-target="#navbarSupportedContent1"
-            aria-controls="navbarSupportedContent1"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="[&>svg]:w-7 [&>svg]:stroke-black/50">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
+    <header className="bg-white">
+      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <div className="md:flex md:items-center md:gap-12">
+            <a className="block text-teal-600" href="#">
+              <span className="sr-only">Home</span>
+              <svg className="h-8" viewBox="0 0 28 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
-                  fillRule="evenodd"
-                  d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z"
-                  clipRule="evenodd"
+                  d="M0.41 10.3847C1.14777 7.4194 2.85643 4.7861 5.2639 2.90424C7.6714 1.02234 10.6393 0 13.695 0C16.7507 0 19.7186 1.02234 22.1261 2.90424C24.5336 4.7861 26.2422 7.4194 26.98 10.3847H25.78C23.7557 10.3549 21.7729 10.9599 20.11 12.1147C20.014 12.1842 19.9138 12.2477 19.81 12.3047H19.67C19.5662 12.2477 19.466 12.1842 19.37 12.1147C17.6924 10.9866 15.7166 10.3841 13.695 10.3841C11.6734 10.3841 9.6976 10.9866 8.02 12.1147C7.924 12.1842 7.8238 12.2477 7.72 12.3047H7.58C7.4762 12.2477 7.376 12.1842 7.28 12.1147C5.6171 10.9599 3.6343 10.3549 1.61 10.3847H0.41ZM23.62 16.6547C24.236 16.175 24.9995 15.924 25.78 15.9447H27.39V12.7347H25.78C24.4052 12.7181 23.0619 13.146 21.95 13.9547C21.3243 14.416 20.5674 14.6649 19.79 14.6649C19.0126 14.6649 18.2557 14.416 17.63 13.9547C16.4899 13.1611 15.1341 12.7356 13.745 12.7356C12.3559 12.7356 11.0001 13.1611 9.86 13.9547C9.2343 14.416 8.4774 14.6649 7.7 14.6649C6.9226 14.6649 6.1657 14.416 5.54 13.9547C4.4144 13.1356 3.0518 12.7072 1.66 12.7347H0V15.9447H1.61C2.39051 15.924 3.154 16.175 3.77 16.6547C4.908 17.4489 6.2623 17.8747 7.65 17.8747C9.0377 17.8747 10.392 17.4489 11.53 16.6547C12.1468 16.1765 12.9097 15.9257 13.69 15.9447C14.4708 15.9223 15.2348 16.1735 15.85 16.6547C16.9901 17.4484 18.3459 17.8738 19.735 17.8738C21.1241 17.8738 22.4799 17.4484 23.62 16.6547ZM23.62 22.3947C24.236 21.915 24.9995 21.664 25.78 21.6847H27.39V18.4747H25.78C24.4052 18.4581 23.0619 18.886 21.95 19.6947C21.3243 20.156 20.5674 20.4049 19.79 20.4049C19.0126 20.4049 18.2557 20.156 17.63 19.6947C16.4899 18.9011 15.1341 18.4757 13.745 18.4757C12.3559 18.4757 11.0001 18.9011 9.86 19.6947C9.2343 20.156 8.4774 20.4049 7.7 20.4049C6.9226 20.4049 6.1657 20.156 5.54 19.6947C4.4144 18.8757 3.0518 18.4472 1.66 18.4747H0V21.6847H1.61C2.39051 21.664 3.154 21.915 3.77 22.3947C4.908 23.1889 6.2623 23.6147 7.65 23.6147C9.0377 23.6147 10.392 23.1889 11.53 22.3947C12.1468 21.9165 12.9097 21.6657 13.69 21.6847C14.4708 21.6623 15.2348 21.9135 15.85 22.3947C16.9901 23.1884 18.3459 23.6138 19.735 23.6138C21.1241 23.6138 22.4799 23.1884 23.62 22.3947Z"
+                  fill="currentColor"
                 />
               </svg>
-            </span>
-          </button>
-
-          <div
-            className="!visible hidden flex-grow basis-[100%] items-center lg:!flex lg:basis-auto"
-            id="navbarSupportedContent1"
-            data-twe-collapse-item
-          >
-            <a
-              className="mb-4 me-5 ms-2 mt-3 flex items-center text-neutral-900 hover:text-neutral-900 focus:text-neutral-900 lg:mb-0 lg:mt-0"
-              href="#"
-            >
-              <img
-                src="https://tecdn.b-cdn.net/img/logo/te-transparent-noshadows.webp"
-                style={{ height: "15px" }}
-                alt="TE Logo"
-                loading="lazy"
-              />
             </a>
-            <ul
-              className="list-style-none me-auto flex flex-col ps-0 lg:flex-row"
-              data-twe-navbar-nav-ref
-            >
-              {navItems.map((item, index) => (
-                <li
-                  key={index}
-                  className="mb-4 lg:mb-0 lg:pe-2"
-                  data-twe-nav-item-ref
+          </div>
+
+          <div className="hidden md:block">
+            <nav aria-label="Global">
+              <ul className="flex items-center gap-6 text-sm">
+                {navItems.map((item) => (
+                  <li key={item.name}>
+                    <a className="text-gray-500 transition hover:text-gray-500/75" href={item.href}>
+                      {item.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="sm:flex sm:gap-4">
+              <a
+                className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm"
+                href="#"
+              >
+                Login
+              </a>
+
+              <div className="hidden sm:flex">
+                <a
+                  className="rounded-md bg-gray-100 px-5 py-2.5 text-sm font-medium text-teal-600"
+                  href="#"
                 >
-                  <a
-                    className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none lg:px-2"
+                  Register
+                </a>
+              </div>
+            </div>
+
+            <div className="block md:hidden">
+              <button
+                className="rounded-sm bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75"
+                onClick={toggleMenu}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="size-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div 
+          className={`md:hidden absolute right-4 w-48 bg-white shadow-lg rounded-md py-2 z-10 overflow-hidden transition-all duration-300 ease-in-out transform origin-top ${
+            isMenuOpen 
+              ? "opacity-100 scale-y-100 max-h-96" 
+              : "opacity-0 scale-y-0 max-h-0"
+          }`}
+        >
+          <nav aria-label="Global">
+            <ul className="flex flex-col items-start text-sm">
+              {navItems.map((item) => (
+                <li key={item.name} className="w-full">
+                  <a 
+                    className="block px-4 py-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-900" 
                     href={item.href}
-                    data-twe-nav-link-ref
                   >
                     {item.name}
                   </a>
                 </li>
               ))}
             </ul>
-          </div>
-
-          <div className="relative flex items-center">
-            <a className="me-4 text-neutral-600" href="#">
-              <span className="[&>svg]:w-5">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z" />
-                </svg>
-              </span>
-            </a>
-
-            <div
-              className="relative"
-              data-twe-dropdown-ref
-              data-twe-dropdown-alignment="end"
-            >
-              <a
-                className="me-4 flex items-center text-neutral-600"
-                href="#"
-                id="dropdownMenuButton1"
-                role="button"
-                data-twe-dropdown-toggle-ref
-                aria-expanded="false"
-              >
-                <span className="[&>svg]:w-5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </span>
-                <span className="absolute -mt-4 ms-2.5 rounded-full bg-danger px-[0.35em] py-[0.15em] text-[0.6rem] font-bold leading-none text-white">
-                  1
-                </span>
-              </a>
-              <ul
-                className="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg data-[twe-dropdown-show]:block"
-                aria-labelledby="dropdownMenuButton1"
-                data-twe-dropdown-menu-ref
-              >
-                <li>
-                  <a
-                    className="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline"
-                    href="#"
-                    data-twe-dropdown-item-ref
-                  >
-                    Action
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline"
-                    href="#"
-                    data-twe-dropdown-item-ref
-                  >
-                    Another action
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline"
-                    href="#"
-                    data-twe-dropdown-item-ref
-                  >
-                    Something else here
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div
-              className="relative"
-              data-twe-dropdown-ref
-              data-twe-dropdown-alignment="end"
-            >
-              <a
-                className="flex items-center whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none"
-                href="#"
-                id="dropdownMenuButton2"
-                role="button"
-                data-twe-dropdown-toggle-ref
-                aria-expanded="false"
-              >
-                <img
-                  src="https://tecdn.b-cdn.net/img/new/avatars/2.jpg"
-                  className="rounded-full"
-                  style={{ height: "25px", width: "25px" }}
-                  alt=""
-                  loading="lazy"
-                />
-              </a>
-              <ul
-                className="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg data-[twe-dropdown-show]:block"
-                aria-labelledby="dropdownMenuButton2"
-                data-twe-dropdown-menu-ref
-              >
-                <li>
-                  <a
-                    className="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline"
-                    href="#"
-                    data-twe-dropdown-item-ref
-                  >
-                    Action
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline"
-                    href="#"
-                    data-twe-dropdown-item-ref
-                  >
-                    Another action
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="block w-full whitespace-nowrap bg-white px-4 py-2 text-sm font-normal text-neutral-700 hover:bg-zinc-200/60 focus:bg-zinc-200/60 focus:outline-none active:bg-zinc-200/60 active:no-underline"
-                    href="#"
-                    data-twe-dropdown-item-ref
-                  >
-                    Something else here
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+          </nav>
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 
