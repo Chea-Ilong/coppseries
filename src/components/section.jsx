@@ -1,79 +1,118 @@
 import React from "react";
-import ProductItem from "./ProductItem";
+import { products } from "../section";
 
-const products = [
-  {
-    alt: "Black machined steel pen with hexagonal grip and small white logo at top.",
-    src: "https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-product-01.jpg",
-    color: "Black",
-    name: "Machined Pen",
-    price: "$35",
-    availableColors: [
-      { name: "Black", hex: "rgb(17, 24, 39)" },
-      { name: "Brass", hex: "rgb(253, 230, 138)" },
-      { name: "Chrome", hex: "rgb(229, 231, 235)" },
-    ],
-  },
-  {
-    alt: "Black porcelain mug with modern square handle and natural clay accents on rim and bottom.",
-    src: "https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-product-02.jpg",
-    color: "Matte Black",
-    name: "Earthen Mug",
-    price: "$28",
-    availableColors: [
-      { name: "Matte Black", hex: "rgb(75, 85, 99)" },
-      { name: "Natural", hex: "rgb(254, 243, 199)" },
-    ],
-  },
-  {
-    alt: "Natural leather journal with brass disc binding and three paper refill sets.",
-    src: "https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-product-03.jpg",
-    color: "Natural",
-    name: "Leatherbound Daily Journal Set",
-    price: "$50",
-    availableColors: [
-      { name: "Natural", hex: "rgb(254, 243, 199)" },
-      { name: "Black", hex: "rgb(31, 41, 55)" },
-      { name: "Brown", hex: "rgb(124, 45, 18)" },
-    ],
-  },
-  {
-    alt: "Black leather journal with brass disc binding.",
-    src: "https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-02-product-04.jpg",
-    color: "Black",
-    name: "Leatherbound Daily Journal",
-    price: "$50",
-    availableColors: [
-      { name: "Black", hex: "rgb(17, 24, 39)" },
-      { name: "Brown", hex: "rgb(124, 45, 18)" },
-      { name: "Natural", hex: "rgb(254, 243, 199)" },
-    ],
-  },
-];
-
-export default function Section() {
+const Section = () => {
   return (
-    <div className="auw cxq dlz dqf dwm">
-      <div className="la aaz abe aua cwy dwi">
-        <h2 className="ayi azo azt baw">Trending products</h2>
-        <a href="#" className="ld ayp azr bbl bwa">
-          See everything<span aria-hidden="true"> →</span>
-        </a>
-      </div>
-      <div className="l hm">
-        <div className="l iz vo afj aww">
-          <ul role="list" className="fx lg ady cml dlx dnr drm dsr dti">
-            {products.map((product, index) => (
-              <ProductItem key={index} product={product} />
+    <>
+    {/* Pre-order */}
+      <div className="bg-white"> {/* Removed extra ']' */}
+        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Pre-Order Now
+          </h2>
+
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            {products.map((product) => (
+              <div key={product.id} className="group relative">
+                <img
+                  alt={product.imageAlt}
+                  src={product.imageSrc}
+                  className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+                />
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href={product.href}>
+                        <span aria-hidden="true" className="absolute inset-0" />
+                        {product.name}
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {product.color}
+                    </p>
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">
+                    {product.price}
+                  </p>
+                </div>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </div>
-      <div className="hq la aua cpb">
-        <a href="#" className="ayp azr bbl bwa">
-          See everything<span aria-hidden="true"> →</span>
-        </a>
+          {/* Hot Sale */}
+          <div className="bg-white"> {/* Removed extra ']' */}
+        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Hot Sales
+          </h2>
+
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            {products.map((product) => (
+              <div key={product.id} className="group relative">
+                <img
+                  alt={product.imageAlt}
+                  src={product.imageSrc}
+                  className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+                />
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href={product.href}>
+                        <span aria-hidden="true" className="absolute inset-0" />
+                        {product.name}
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {product.color}
+                    </p>
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">
+                    {product.price}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+            {/* FEATURED */}
+      <div className="bg-white"> {/* Removed extra ']' */}
+        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            Featured Products
+          </h2>
+
+          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            {products.map((product) => (
+              <div key={product.id} className="group relative">
+                <img
+                  alt={product.imageAlt}
+                  src={product.imageSrc}
+                  className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+                />
+                <div className="mt-4 flex justify-between">
+                  <div>
+                    <h3 className="text-sm text-gray-700">
+                      <a href={product.href}>
+                        <span aria-hidden="true" className="absolute inset-0" />
+                        {product.name}
+                      </a>
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {product.color}
+                    </p>
+                  </div>
+                  <p className="text-sm font-medium text-gray-900">
+                    {product.price}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
   );
-}
+};
+export default Section;

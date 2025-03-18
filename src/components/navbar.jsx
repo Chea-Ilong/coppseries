@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { gsap } from "gsap";
 import { Collapse, Dropdown, initTWE } from "tw-elements";
 import { navItems } from "../Navbar";
 
@@ -14,6 +15,7 @@ const Navbar = () => {
   };
 
   return (
+    <>
     <header className="bg-white">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
@@ -106,6 +108,7 @@ const Navbar = () => {
         </div>
       </div>
     </header>
+    </>
   );
 };
 
