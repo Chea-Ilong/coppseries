@@ -3,7 +3,7 @@ import { Collapse, Dropdown, initTWE } from "tw-elements";
 import { navItems } from "../Navbar";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  // const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     initTWE({ Collapse, Dropdown });
