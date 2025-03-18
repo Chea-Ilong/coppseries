@@ -1,5 +1,5 @@
 import "./App.css";
-import Navbar from "./navbar"; // Import Navbar
+import Navbar from "./components/Navbar"; // Import Navbar
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
