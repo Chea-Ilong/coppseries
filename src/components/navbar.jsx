@@ -9,7 +9,6 @@ const Navbar = () => {
     initTWE({ Collapse, Dropdown });
   }, []);
 
-
   return (
     <nav className="flex-no-wrap relative flex w-full items-center justify-between bg-white py-2 shadow-dark-mild lg:flex-wrap lg:justify-start lg:py-4">
       <div className="container mx-auto" style={{ maxWidth: "1024px" }}>
@@ -59,7 +58,11 @@ const Navbar = () => {
               data-twe-navbar-nav-ref
             >
               {navItems.map((item, index) => (
-                <li key={index} className="mb-4 lg:mb-0 lg:pe-2" data-twe-nav-item-ref>
+                <li
+                  key={index}
+                  className="mb-4 lg:mb-0 lg:pe-2"
+                  data-twe-nav-item-ref
+                >
                   <a
                     className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none lg:px-2"
                     href={item.href}
