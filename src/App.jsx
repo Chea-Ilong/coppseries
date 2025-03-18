@@ -1,16 +1,18 @@
-import './App.css' 
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
-
-const navigation = [
-  { name: 'Home', href: '#', current: true },
-  { name: 'Shop', href: '#', current: false },
-  { name: 'About Us', href: '#', current: false },
-  { name: 'Contact Us', href: '#', current: false },
-]
+import "./App.css";
+import { navigation } from "./navigation";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+} from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function App() {
@@ -23,13 +25,20 @@ export default function App() {
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-500 hover:bg-gray-200 hover:text-gray-900 focus:ring-2 focus:ring-gray-900 focus:outline-hidden focus:ring-inset">
               <span className="absolute -inset-0.5" />
               <span className="sr-only">Open main menu</span>
-              <Bars3Icon aria-hidden="true" className="block size-6 group-data-open:hidden" />
-              <XMarkIcon aria-hidden="true" className="hidden size-6 group-data-open:block" />
+              <Bars3Icon
+                aria-hidden="true"
+                className="block size-6 group-data-open:hidden"
+              />
+              <XMarkIcon
+                aria-hidden="true"
+                className="hidden size-6 group-data-open:block"
+              />
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
-              <img id='logo'
+              <img
+                id="logo"
                 alt="Your Company"
                 src="src\assets\COPPSARY-nonepng - Copy.png"
                 className="h-8 w-auto"
@@ -41,10 +50,12 @@ export default function App() {
                   <a
                     key={item.name}
                     href={item.href}
-                    aria-current={item.current ? 'page' : undefined}
+                    aria-current={item.current ? "page" : undefined}
                     className={classNames(
-                      item.current ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-900',
-                      'rounded-md px-3 py-2 text-sm font-medium',
+                      item.current
+                        ? "bg-gray-200 text-gray-900"
+                        : "text-gray-500 hover:bg-gray-200 hover:text-gray-900",
+                      "rounded-md px-3 py-2 text-sm font-medium"
                     )}
                   >
                     {item.name}
@@ -52,6 +63,19 @@ export default function App() {
                 ))}
               </div>
             </div>
+          </div>
+          {/* SEARCH */}
+          <div className="relative flex items-center">
+            <form class="search">
+              <div class="search-container">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                  class="search-input"
+                  type="search"
+                  placeholder=" Search Product..."
+                />
+              </div>
+            </form>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
@@ -117,10 +141,12 @@ export default function App() {
               key={item.name}
               as="a"
               href={item.href}
-              aria-current={item.current ? 'page' : undefined}
+              aria-current={item.current ? "page" : undefined}
               className={classNames(
-                item.current ? 'bg-gray-200 text-gray-900' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-900',
-                'block rounded-md px-3 py-2 text-base font-medium',
+                item.current
+                  ? "bg-gray-200 text-gray-900"
+                  : "text-gray-500 hover:bg-gray-200 hover:text-gray-900",
+                "block rounded-md px-3 py-2 text-base font-medium"
               )}
             >
               {item.name}
@@ -129,5 +155,5 @@ export default function App() {
         </div>
       </DisclosurePanel>
     </Disclosure>
-  )
+  );
 }
