@@ -1,11 +1,33 @@
-import React from "react";
+import React, { useRef } from "react";
 import { products } from "../section";
+import { Link, useNavigate } from "react-router-dom";
+import { gsap } from "gsap";
 
 const Section = () => {
+  const navigate = useNavigate();
+
+  const handleProductClick = (e, productId) => {
+    e.preventDefault();
+    
+    // Get the clicked product element
+    const productElement = e.currentTarget;
+    
+    // Create animation
+    gsap.to(productElement, {
+      scale: 0.95,
+      opacity: 0.7,
+      duration: 0.3,
+      onComplete: () => {
+        // Navigate to product page after animation completes
+        navigate(`/product/${productId}`);
+      }
+    });
+  };
+
   return (
     <>
-    {/* Pre-order */}
-      <div className="bg-white"> {/* Removed extra ']' */}
+      {/* Pre-order */}
+      <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             Pre-Order Now
@@ -13,35 +35,39 @@ const Section = () => {
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {products.map((product) => (
-              <div key={product.id} className="group relative">
-                <img
-                  alt={product.imageAlt}
-                  src={product.imageSrc}
-                  className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
-                />
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
+              <div 
+                key={product.id} 
+                className="group relative cursor-pointer" 
+                onClick={(e) => handleProductClick(e, product.id)}
+              >
+                <div>
+                  <img
+                    alt={product.imageAlt}
+                    src={product.imageSrc}
+                    className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+                  />
+                  <div className="mt-4 flex justify-between">
+                    <div>
+                      <h3 className="text-sm text-gray-700">
                         {product.name}
-                      </a>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.color}
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {product.color}
+                      </p>
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {product.price}
                     </p>
                   </div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {product.price}
-                  </p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-          {/* Hot Sale */}
-          <div className="bg-white"> {/* Removed extra ']' */}
+      
+      {/* Hot Sale */}
+      <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             Hot Sales
@@ -49,35 +75,39 @@ const Section = () => {
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {products.map((product) => (
-              <div key={product.id} className="group relative">
-                <img
-                  alt={product.imageAlt}
-                  src={product.imageSrc}
-                  className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
-                />
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
+              <div 
+                key={product.id} 
+                className="group relative cursor-pointer" 
+                onClick={(e) => handleProductClick(e, product.id)}
+              >
+                <div>
+                  <img
+                    alt={product.imageAlt}
+                    src={product.imageSrc}
+                    className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+                  />
+                  <div className="mt-4 flex justify-between">
+                    <div>
+                      <h3 className="text-sm text-gray-700">
                         {product.name}
-                      </a>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.color}
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {product.color}
+                      </p>
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {product.price}
                     </p>
                   </div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {product.price}
-                  </p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-            {/* FEATURED */}
-      <div className="bg-white"> {/* Removed extra ']' */}
+      
+      {/* FEATURED */}
+      <div className="bg-white">
         <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">
             Featured Products
@@ -85,27 +115,30 @@ const Section = () => {
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
             {products.map((product) => (
-              <div key={product.id} className="group relative">
-                <img
-                  alt={product.imageAlt}
-                  src={product.imageSrc}
-                  className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
-                />
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
+              <div 
+                key={product.id} 
+                className="group relative cursor-pointer" 
+                onClick={(e) => handleProductClick(e, product.id)}
+              >
+                <div>
+                  <img
+                    alt={product.imageAlt}
+                    src={product.imageSrc}
+                    className="aspect-square w-full rounded-md bg-gray-200 object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
+                  />
+                  <div className="mt-4 flex justify-between">
+                    <div>
+                      <h3 className="text-sm text-gray-700">
                         {product.name}
-                      </a>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.color}
+                      </h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        {product.color}
+                      </p>
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {product.price}
                     </p>
                   </div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {product.price}
-                  </p>
                 </div>
               </div>
             ))}
@@ -115,4 +148,5 @@ const Section = () => {
     </>
   );
 };
+
 export default Section;

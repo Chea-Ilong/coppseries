@@ -1,8 +1,10 @@
 import "./App.css";
-import Navbar from "./components/navbar"; 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./components/navbar";
 import Carousel from "./components/carousel";
-import Section from "./components/section"; 
+import Section from "./components/section";
 import Footer from "./components/footer";
+import ProductOverview from "./components/productOverview";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -10,11 +12,18 @@ function classNames(...classes) {
 
 export default function App() {
   return (
-    <>
+    <BrowserRouter>
       <Navbar />
-      <Carousel />
-      <Section />
+      <Routes>
+        <Route path="/" element={
+          <>
+            <Carousel />
+            <Section />
+          </>
+        } />
+        <Route path="/product/:id" element={<ProductOverview />} />
+      </Routes>
       <Footer />
-    </>
+    </BrowserRouter>
   );
 }
