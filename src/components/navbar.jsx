@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { navItems } from "../Navbar";
 import { ThemeToggle } from "../context/ThemeToggle";
@@ -7,15 +7,39 @@ import { useTheme } from "../context/ThemeContext";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { theme } = useTheme();
 
+  // Add scroll event listener to detect when user scrolls
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <nav className={`bg-nav shadow`}>
+    <nav 
+      className={`bg-nav shadow transition-all duration-300 ease-in-out ${
+        isScrolled ? "py-1" : "py-3"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="text-xl font-bold text-primary">
+              <Link 
+                to="/" 
+                className="text-xl font-bold text-primary transform transition-transform duration-300 hover:scale-105"
+              >
                 CoppSeries
               </Link>
             </div>
@@ -24,7 +48,7 @@ export default function Navbar() {
                 <a
                   key={item.name}
                   href={item.href}
-                  className="border-transparent text-primary hover-accent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                  className="border-transparent text-primary hover-accent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 ease-in-out hover:border-primary"
                 >
                   {item.name}
                 </a>
@@ -36,15 +60,15 @@ export default function Navbar() {
             <div className="flex items-center">
               {/* Desktop search input */}
               <div className="hidden sm:block">
-                <div className="search-container">
+                <div className="search-container relative">
                   <input
                     type="text"
                     placeholder="Search..."
-                    className="search-input"
+                    className="search-input transition-all duration-300 focus:ring-2 focus:ring-primary focus:outline-none"
                     aria-label="Search"
                   />
                   <svg
-                    className="h-5 w-5 text-secondary"
+                    className="h-5 w-5 text-secondary absolute right-2 top-1/2 transform -translate-y-1/2 transition-colors duration-300"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -63,17 +87,17 @@ export default function Navbar() {
               {/* Mobile search button and expandable search input */}
               <div className="block sm:hidden">
                 {isSearchOpen ? (
-                  <div className="flex items-center">
+                  <div className="flex items-center animate-fadeIn">
                     <input
                       type="text"
                       placeholder="Search..."
-                      className="search-input"
+                      className="search-input transition-all duration-300 focus:ring-2 focus:ring-primary focus:outline-none"
                       aria-label="Search"
                       autoFocus
                     />
                     <button 
                       onClick={() => setIsSearchOpen(false)}
-                      className="ml-2"
+                      className="ml-2 transition-transform duration-300 hover:rotate-90"
                     >
                       <svg
                         className="h-5 w-5 text-secondary"
@@ -92,7 +116,10 @@ export default function Navbar() {
                     </button>
                   </div>
                 ) : (
-                  <button onClick={() => setIsSearchOpen(true)}>
+                  <button 
+                    onClick={() => setIsSearchOpen(true)}
+                    className="transition-transform duration-300 hover:scale-110"
+                  >
                     <svg
                       className="h-5 w-5 text-secondary"
                       xmlns="http://www.w3.org/2000/svg"
@@ -113,13 +140,15 @@ export default function Navbar() {
             </div>
 
             {/* Theme toggle */}
-            <ThemeToggle />
+            <div className="transition-transform duration-300 hover:scale-110">
+              <ThemeToggle />
+            </div>
 
             {/* Mobile menu button */}
             <div className="sm:hidden">
               <button
                 type="button"
-                className="inline-flex items-center justify-center p-2 rounded-md text-primary hover-accent"
+                className="inline-flex items-center justify-center p-2 rounded-md text-primary hover-accent transition-colors duration-300"
                 aria-controls="mobile-menu"
                 aria-expanded={isOpen}
                 onClick={() => {
@@ -132,7 +161,7 @@ export default function Navbar() {
                 </span>
                 {isOpen ? (
                   <svg
-                    className="h-6 w-6"
+                    className="h-6 w-6 transition-transform duration-300 rotate-90"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -147,7 +176,7 @@ export default function Navbar() {
                   </svg>
                 ) : (
                   <svg
-                    className="h-6 w-6"
+                    className="h-6 w-6 transition-transform duration-300"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -167,17 +196,26 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu with animation */}
       <div
-        className={`${isOpen ? "block" : "hidden"} sm:hidden`}
+        className={`transition-all duration-300 ease-in-out transform ${
+          isOpen 
+            ? "opacity-100 max-h-96" 
+            : "opacity-0 max-h-0 overflow-hidden"
+        } sm:hidden`}
         id="mobile-menu"
       >
         <div className="pt-2 pb-3 space-y-1">
-          {navItems.map((item) => (
+          {navItems.map((item, index) => (
             <a
               key={item.name}
               href={item.href}
-              className="text-primary hover-accent block px-3 py-2 text-base font-medium"
+              style={{ 
+                transitionDelay: `${index * 50}ms`
+              }}
+              className={`text-primary hover-accent block px-3 py-2 text-base font-medium transform transition-all duration-300 ${
+                isOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+              }`}
             >
               {item.name}
             </a>
