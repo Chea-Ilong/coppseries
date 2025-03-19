@@ -125,7 +125,7 @@ export const products = [
     href: "#",
     imageSrc: "https://www.goldonecomputer.com/image/cache/catalog/Products/Gaming%20Gear/Gaming%20Mouse/CORSAIR-KATAR-Elite-330x409.jpg",
     imageAlt: "CORSAIR KATAR Elite Wireless Gaming Mouse",
-    price: "$350.00",
+    price: "$35.00",
     description: {
       overview: "Ultra-lightweight wireless gaming mouse with SLIPSTREAM technology, high-precision optical sensor, and extended battery life for competitive gaming.",
       specs: {
