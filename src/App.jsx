@@ -1,6 +1,7 @@
 import "./App.css";
 import "./styles/theme.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { motion } from "framer-motion";
 import Navbar from "./components/navbar";
 import Carousel from "./components/carousel";
 import Section from "./components/section";
@@ -19,15 +20,30 @@ export default function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
+        <motion.div 
+          className="min-h-screen flex flex-col"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.div
+            initial={{ y: -50 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Navbar />
+          </motion.div>
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={
-                <>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.2 }}
+                >
                   <Carousel />
                   <Section />
-                </>
+                </motion.div>
               } />
               <Route path="/product/:id" element={<ProductOverview />} />
               <Route path="/login" element={<Login />} />
@@ -35,8 +51,14 @@ export default function App() {
               <Route path="/forget-password" element={<ForgetPassword />} />
             </Routes>
           </main>
-          <Footer />
-        </div>
+          <motion.div
+            initial={{ y: 50 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Footer />
+          </motion.div>
+        </motion.div>
       </BrowserRouter>
     </ThemeProvider>
   );

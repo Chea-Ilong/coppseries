@@ -35,7 +35,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Left: Logo */}
-          <div className="w-1/4 flex-shrink-0 flex items-center">
+          <div className="flex-shrink-0 flex items-center">
             <Link
               to="/"
               className="text-xl font-bold text-primary transform transition-transform duration-300 hover:scale-105"
@@ -49,30 +49,30 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Center: Navigation Items */}
-          <div className="hidden sm:flex flex-grow justify-center items-center">
-            <div className="flex space-x-8">
+          {/* Center: Navigation Items - Adjusted for 1024px */}
+          <div className="hidden md:flex flex-grow justify-center items-center">
+            <div className="flex lg:space-x-8 md:space-x-4">
               {navItems.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
-                  className="border-transparent text-primary hover-accent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 ease-in-out hover:border-primary"
+                  className="border-transparent text-primary hover-accent inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition-all duration-300 ease-in-out hover:border-primary lg:text-base md:text-sm"
                 >
                   {item.name}
                 </a>
               ))}
             </div>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center lg:space-x-4 md:space-x-2">
             {/* Search functionality */}
             <div className="flex items-center">
-              {/* Desktop search input */}
-              <div className="hidden sm:block">
+              {/* Desktop search input - adjusted for 1024px */}
+              <div className="hidden md:block">
                 <div className="search-container relative">
                   <input
                     type="text"
                     placeholder="Search..."
-                    className="search-input transition-all duration-300 focus:ring-2 focus:ring-primary focus:outline-none"
+                    className="search-input transition-all duration-300 focus:ring-2 focus:ring-primary focus:outline-none lg:w-64 md:w-48"
                     aria-label="Search"
                   />
                   <svg
@@ -93,7 +93,7 @@ export default function Navbar() {
               </div>
 
               {/* Mobile search button and expandable search input */}
-              <div className="block sm:hidden">
+              <div className="block md:hidden">
                 {isSearchOpen ? (
                   <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm animate-fadeIn">
                     <div className="fixed inset-x-0 top-0">
@@ -165,17 +165,17 @@ export default function Navbar() {
               </div>
             </div>
 
-            {/* Login and Signup buttons */}
-            <div className="hidden sm:flex items-center space-x-3">
+            {/* Login and Signup buttons - adjusted for 1024px */}
+            <div className="hidden md:flex items-center lg:space-x-3 md:space-x-2">
               <Link
                 to="/login"
-                className="px-3 py-1.5 text-sm font-medium text-primary border border-primary/60 rounded-md hover:bg-primary/10 transition-all duration-300 ease-in-out"
+                className="lg:px-3 md:px-2 py-1.5 text-sm font-medium text-primary border border-primary/60 rounded-md hover:bg-primary/10 transition-all duration-300 ease-in-out"
               >
                 Log In
               </Link>
               <Link
                 to="/signup"
-                className={`px-3 py-1.5 text-sm font-medium rounded-md shadow-sm transition-all duration-300 ease-in-out ${
+                className={`lg:px-3 md:px-2 py-1.5 text-sm font-medium rounded-md shadow-sm transition-all duration-300 ease-in-out ${
                   theme === 'dark' 
                     ? 'bg-white text-black hover:bg-white/90' 
                     : 'bg-black text-white hover:bg-black/90'
@@ -191,7 +191,7 @@ export default function Navbar() {
             </div>
 
             {/* Mobile menu button */}
-            <div className="sm:hidden">
+            <div className="md:hidden">
               <button
                 type="button"
                 className="inline-flex items-center justify-center p-2 rounded-md text-primary hover-accent transition-colors duration-300"
@@ -246,7 +246,7 @@ export default function Navbar() {
       <div
         className={`transition-all duration-300 ease-in-out transform ${
           isOpen ? "opacity-100 max-h-96" : "opacity-0 max-h-0 overflow-hidden"
-        } sm:hidden`}
+        } md:hidden`}
         id="mobile-menu"
       >
         <div className="pt-2 pb-3 space-y-1">
@@ -267,7 +267,7 @@ export default function Navbar() {
           {/* Login and Signup in mobile menu */}
           <div className="flex space-x-2 px-3 pt-4 pb-2">
             <Link
-              to="src\components\auth\login.jsx"
+              to="/login"
               style={{
                 transitionDelay: `${navItems.length * 50}ms`,
               }}
@@ -278,7 +278,7 @@ export default function Navbar() {
               Log In
             </Link>
             <Link
-              to="src\components\auth\signup.jsx"
+              to="/signup"
               style={{
                 transitionDelay: `${(navItems.length + 1) * 50}ms`,
               }}
