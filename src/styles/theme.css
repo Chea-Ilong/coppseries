@@ -1,0 +1,94 @@
+/* Base theme variables */
+:root {
+  /* Light mode (default) */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f3f4f6;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-border: #e5e7eb;
+  --color-accent: #3b82f6;
+  --color-button: #2563eb;
+  --color-button-hover: #1d4ed8;
+  --color-input-bg: #ffffff;
+  --color-input-border: #d1d5db;
+  --color-input-focus: #3b82f6;
+  --color-card-bg: #ffffff;
+  --color-card-shadow: rgba(0, 0, 0, 0.1);
+  --color-nav-bg: #ffffff;
+  --color-footer-bg: #f9fafb;
+  --color-footer-text: #4b5563;
+}
+
+/* Dark mode */
+.dark {
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #1f2937;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-border: #374151;
+  --color-accent: #60a5fa;
+  --color-button: #3b82f6;
+  --color-button-hover: #2563eb;
+  --color-input-bg: #1f2937;
+  --color-input-border: #4b5563;
+  --color-input-focus: #60a5fa;
+  --color-card-bg: #1f2937;
+  --color-card-shadow: rgba(0, 0, 0, 0.25);
+  --color-nav-bg: #111827;
+  --color-footer-bg: #0f172a;
+  --color-footer-text: #f9fafb;
+}
+
+/* Apply theme to elements */
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.search-container {
+  border-color: var(--color-input-border);
+  background-color: var(--color-input-bg);
+}
+
+.search-container:hover,
+.search-input:focus-within {
+  border-color: var(--color-input-focus);
+}
+
+.search-input {
+  color: var(--color-text-primary);
+  background-color: var(--color-input-bg);
+}
+
+.search-input::placeholder {
+  color: var(--color-text-secondary);
+}
+
+/* Fix Tailwind classes for navbar */
+.bg-nav {
+  background-color: var(--color-nav-bg);
+}
+
+.text-primary {
+  color: var(--color-text-primary);
+}
+
+.text-secondary {
+  color: var(--color-text-secondary);
+}
+
+.hover-accent:hover {
+  color: var(--color-accent);
+}
+
+/* Product Card */
+.product-card {
+  border-color: var(--color-border);
+}
+
+/* Footer */
+.footer {
+  background-color: var(--color-footer-bg);
+  color: var(--color-footer-text);
+}

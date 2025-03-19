@@ -1,10 +1,12 @@
 import "./App.css";
+import "./styles/theme.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/navbar";
 import Carousel from "./components/carousel";
 import Section from "./components/section";
 import Footer from "./components/footer";
 import ProductOverview from "./components/productOverview";
+import { ThemeProvider } from "./context/ThemeContext";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -12,18 +14,24 @@ function classNames(...classes) {
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={
-          <>
-            <Carousel />
-            <Section />
-          </>
-        } />
-        <Route path="/product/:id" element={<ProductOverview />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+    <ThemeProvider>
+      <BrowserRouter>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <Carousel />
+                  <Section />
+                </>
+              } />
+              <Route path="/product/:id" element={<ProductOverview />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
