@@ -2,29 +2,29 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const Login = () => {
+const ForgetPassword = () => {
   const [formData, setFormData] = useState({
     email: "",
-    password: "",
-    remember: false,
   });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess(false);
 
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -33,12 +33,12 @@ const Login = () => {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        navigate("/");
+        setSuccess(true);
+        // Clear the form
+        setFormData({ email: "" });
       } else {
         const errorData = await response.json();
-        setError(errorData.message || "Login failed");
+        setError(errorData.message || "Password reset request failed");
       }
     } catch (err) {
       setError("An error occurred. Please try again.");
@@ -86,8 +86,16 @@ const Login = () => {
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.3 }}
             >
-              Sign in to your account
+              Reset your password
             </motion.h1>
+            <motion.p
+              className="text-sm text-secondary"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.3 }}
+            >
+              Enter your email and we'll send you instructions to reset your password
+            </motion.p>
             {error && (
               <motion.div 
                 className="text-red-600 bg-red-100 p-3 rounded-lg text-sm"
@@ -96,6 +104,16 @@ const Login = () => {
                 exit={{ opacity: 0 }}
               >
                 {error}
+              </motion.div>
+            )}
+            {success && (
+              <motion.div 
+                className="text-green-600 bg-green-100 p-3 rounded-lg text-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                Password reset instructions have been sent to your email.
               </motion.div>
             )}
             <motion.form 
@@ -123,93 +141,32 @@ const Login = () => {
                   required
                 />
               </div>
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-primary"
-                >
-                  Password
-                </label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  className="bg-input-bg border border-input-border text-primary rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5"
-                  required
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-start">
-                  <div className="flex items-center h-5 relative">
-                    <motion.input
-                      id="remember"
-                      name="remember"
-                      type="checkbox"
-                      checked={formData.remember}
-                      onChange={handleChange}
-                      className="appearance-none peer w-4 h-4 border-2 border-input-border rounded bg-input-bg 
-                      focus:ring-2 focus:ring-accent cursor-pointer
-                      transition-all duration-300 ease-in-out
-                      checked:border-accent hover:border-accent
-                      relative z-10"
-                      whileTap={{ scale: 0.9 }}
-                    />
-                    <motion.div 
-                      className="absolute inset-0 z-20 pointer-events-none"
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ 
-                        scale: formData.remember ? 1 : 0,
-                        opacity: formData.remember ? 1 : 0
-                      }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <svg className="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z"/>
-                      </svg>
-                    </motion.div>
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label 
-                      htmlFor="remember" 
-                      className="text-secondary hover:text-primary cursor-pointer 
-                      transition-all duration-300 ease-in-out
-                      select-none"
-                    >
-                      Remember me
-                    </label>
-                  </div>
-                </div>
-                <motion.a
-                  href="forget-password"
-                  className="text-sm font-medium text-accent hover:underline"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Forgot password?
-                </motion.a>
-              </div>
               <motion.button
                 type="submit"
                 className="w-full bg-primary hover:bg-primary/80 focus:ring-4 focus:outline-none focus:ring-accent/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors duration-300 border-2 border-border"
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Sign in
+                Send reset link
               </motion.button>
-              <p className="text-sm font-light text-primary">
-                Don't have an account yet?{" "}
+              <div className="flex items-center justify-between">
+                <motion.a 
+                  href="login" 
+                  className="text-sm font-medium text-accent hover:underline"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Back to login
+                </motion.a>
                 <motion.a 
                   href="signup" 
-                  className="font-medium text-accent hover:underline"
+                  className="text-sm font-medium text-accent hover:underline"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   Sign up
                 </motion.a>
-              </p>
+              </div>
             </motion.form>
           </div>
         </motion.div>
@@ -218,4 +175,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgetPassword;
