@@ -9,14 +9,15 @@ const Footer = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             {/* Logo */}
             <a href="/" className="flex items-center gap-3">
-              <img 
-                src="https://flowbite.com/docs/images/logo.svg" 
-                className="h-8 w-auto" 
+            <img 
+                src="src\assets\CS-logo-removebg-preview.png" 
+                className="h-12 w-auto transition-all duration-300"
+                style={{ filter: 'var(--logo-filter)' }}
                 alt="CoppSeries Logo" 
               />
-              <span className="text-xl md:text-2xl font-semibold text-primary">
+              {/* <span className="text-xl md:text-2xl font-semibold text-primary">
                 CoppSeries
-              </span>
+              </span> */}
             </a>
 
             {/* Navigation */}

@@ -17,6 +17,7 @@
   --color-nav-bg: #ffffff;
   --color-footer-bg: #f9fafb;
   --color-footer-text: #4b5563;
+  --logo-filter: none;
 }
 
 /* Dark mode */
@@ -37,6 +38,7 @@
   --color-nav-bg: #111827;
   --color-footer-bg: #0f172a;
   --color-footer-text: #f9fafb;
+  --logo-filter: brightness(0) invert(1);
 }
 
 /* Apply theme to elements */

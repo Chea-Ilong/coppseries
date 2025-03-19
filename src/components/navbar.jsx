@@ -27,23 +27,31 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav 
+    <nav
       className={`bg-nav shadow transition-all duration-300 ease-in-out ${
         isScrolled ? "py-1" : "py-3"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Link 
-                to="/" 
-                className="text-xl font-bold text-primary transform transition-transform duration-300 hover:scale-105"
-              >
-                CoppSeries
-              </Link>
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Left: Logo */}
+          <div className="w-1/4 flex-shrink-0 flex items-center">
+            <Link
+              to="/"
+              className="text-xl font-bold text-primary transform transition-transform duration-300 hover:scale-105"
+            >
+              <img
+                src="src\assets\CS-logo-removebg-preview.png"
+                alt="logo"
+                className="h-12 w-auto transition-all duration-300"
+                style={{ filter: "var(--logo-filter)" }}
+              />
+            </Link>
+          </div>
+
+          {/* Center: Navigation Items */}
+          <div className="hidden sm:flex flex-grow justify-center items-center">
+            <div className="flex space-x-8">
               {navItems.map((item) => (
                 <a
                   key={item.name}
@@ -87,41 +95,59 @@ export default function Navbar() {
               {/* Mobile search button and expandable search input */}
               <div className="block sm:hidden">
                 {isSearchOpen ? (
-                  <div className="flex items-center animate-fadeIn">
-                    <input
-                      type="text"
-                      placeholder="Search..."
-                      className="search-input transition-all duration-300 focus:ring-2 focus:ring-primary focus:outline-none"
-                      aria-label="Search"
-                      autoFocus
-                    />
-                    <button 
-                      onClick={() => setIsSearchOpen(false)}
-                      className="ml-2 transition-transform duration-300 hover:rotate-90"
-                    >
-                      <svg
-                        className="h-5 w-5 text-secondary"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
+                  <div className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm animate-fadeIn">
+                    <div className="fixed inset-x-0 top-0">
+                      <div className="bg-nav p-4 shadow-lg animate-slideDown">
+                        <div className="relative flex items-center max-w-md mx-auto animate-scaleIn">
+                          <input
+                            type="text"
+                            placeholder="Search products..."
+                            className="w-full px-4 py-2 text-sm rounded-full 
+                bg-secondary/10 border border-primary/20 
+                text-primary placeholder-primary/50 
+                focus:outline-none focus:ring-2 
+                focus:ring-primary/50 focus:border-transparent
+                transition-all duration-300 ease-in-out"
+                            aria-label="Search"
+                            autoFocus
+                          />
+                          <button
+                            onClick={() => setIsSearchOpen(false)}
+                            className="absolute right-3 p-1.5 rounded-full 
+                hover:bg-primary/10 active:bg-primary/20
+                transition-all duration-300 ease-in-out
+                hover:rotate-90"
+                          >
+                            <svg
+                              className="h-5 w-5 text-primary/70"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 ) : (
-                  <button 
+                  <button
                     onClick={() => setIsSearchOpen(true)}
-                    className="transition-transform duration-300 hover:scale-110"
+                    className="p-2 rounded-full 
+        hover:bg-primary/10 active:bg-primary/20 
+        transition-all duration-300 ease-in-out 
+        hover:scale-110"
+                    aria-label="Open search"
                   >
                     <svg
-                      className="h-5 w-5 text-secondary"
+                      className="h-5 w-5 text-primary/70"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
@@ -199,9 +225,7 @@ export default function Navbar() {
       {/* Mobile menu with animation */}
       <div
         className={`transition-all duration-300 ease-in-out transform ${
-          isOpen 
-            ? "opacity-100 max-h-96" 
-            : "opacity-0 max-h-0 overflow-hidden"
+          isOpen ? "opacity-100 max-h-96" : "opacity-0 max-h-0 overflow-hidden"
         } sm:hidden`}
         id="mobile-menu"
       >
@@ -210,8 +234,8 @@ export default function Navbar() {
             <a
               key={item.name}
               href={item.href}
-              style={{ 
-                transitionDelay: `${index * 50}ms`
+              style={{
+                transitionDelay: `${index * 50}ms`,
               }}
               className={`text-primary hover-accent block px-3 py-2 text-base font-medium transform transition-all duration-300 ${
                 isOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
