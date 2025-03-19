@@ -7,6 +7,7 @@ import { useTheme } from "../context/ThemeContext";
 export default function ProductOverview() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
   const productRef = useRef(null);
   const { theme } = useTheme();
 
@@ -29,6 +30,16 @@ export default function ProductOverview() {
       });
     }
   }, [product]);
+
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
+
+  const increaseQuantity = () => {
+    setQuantity(quantity + 1);
+  };
 
   if (!product) {
     return (
@@ -63,18 +74,45 @@ export default function ProductOverview() {
             <h1 className="text-2xl font-semibold text-primary sm:text-3xl">
               {product.name}
             </h1>
-            <p className="text-3xl font-extrabold text-primary sm:text-4xl mt-4">
-              {product.price}
-            </p>
+            <div className="flex items-center justify-between mt-4">
+              <p className="text-3xl font-extrabold text-primary sm:text-4xl">
+                {product.price}
+              </p>
+              <div className="flex items-center overflow-hidden border border-gray-300 dark:border-gray-700 rounded-md">
+                <button
+                  onClick={decreaseQuantity}
+                  className={`px-3 py-1 text-lg text-primary focus:outline-none transition-all duration-150 ${
+                    theme === "light"
+                      ? "hover:bg-gray-50"
+                      : "hover:bg-gray-800"
+                  }`}
+                >
+                  -
+                </button>
+                <span className="px-3 py-1 text-primary border-l border-r border-gray-300 dark:border-gray-700">{quantity}</span>
+                <button
+                  onClick={increaseQuantity}
+                  className={`px-3 py-1 text-lg text-primary focus:outline-none transition-all duration-150 ${
+                    theme === "light"
+                      ? "hover:bg-gray-50"
+                      : "hover:bg-gray-800"
+                  }`}
+                >
+                  +
+                </button>
+              </div>
+            </div>
             <div className="mt-4 space-y-6">
-              <p className="text-lg text-secondary">Color: {product.color}</p>
-              <p className="text-base text-secondary">{product.imageAlt}</p>
+              {/* <p className="text-lg text-secondary">Color: {product.color}</p>
+              <p className="text-base text-secondary">{product.imageAlt}</p> */}
 
               <div className="mt-8">
                 <button
                   type="button"
-                  className={`w-full rounded-md bg-button px-5 py-3 text-sm font-medium shadow-sm hover:bg-button-hover focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 ${
-                    theme === "light" ? "text-gray-900" : "text-white"
+                  className={`w-full rounded-md bg-button px-5 py-3 text-base font-medium shadow-sm hover:bg-button-hover focus:outline-none transition-all duration-200 ease-in-out ${
+                    theme === "light"
+                      ? "text-gray-900 border border-transparent hover:border-gray-300"
+                      : "text-white border border-gray-700 hover:border-gray-500"
                   }`}
                 >
                   Add to Cart
