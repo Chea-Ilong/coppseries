@@ -7,6 +7,7 @@ import Section from "./components/section";
 import Footer from "./components/footer";
 import ProductOverview from "./components/productOverview";
 import { ThemeProvider } from "./context/ThemeContext";
+import Login from "./components/auth/login";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -27,6 +28,7 @@ export default function App() {
                 </>
               } />
               <Route path="/product/:id" element={<ProductOverview />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </main>
           <Footer />

@@ -1,6 +1,7 @@
 /* Base theme variables */
 :root {
   /* Light mode (default) */
+  --color-text-primary: #000000;
   --color-bg-primary: #ffffff;
   --color-bg-secondary: #f3f4f6;
   --color-text-primary: #111827;
@@ -19,7 +20,9 @@
   --color-footer-text: #4b5563;
   --logo-filter: none;
 }
-
+[data-theme='dark'] {
+  --color-text-primary: #ffffff;
+}
 /* Dark mode */
 .dark {
   --color-bg-primary: #111827;

@@ -165,6 +165,26 @@ export default function Navbar() {
               </div>
             </div>
 
+            {/* Login and Signup buttons */}
+            <div className="hidden sm:flex items-center space-x-3">
+              <Link
+                to="/login"
+                className="px-3 py-1.5 text-sm font-medium text-primary border border-primary/60 rounded-md hover:bg-primary/10 transition-all duration-300 ease-in-out"
+              >
+                Log In
+              </Link>
+              <Link
+                to="/signup"
+                className={`px-3 py-1.5 text-sm font-medium rounded-md shadow-sm transition-all duration-300 ease-in-out ${
+                  theme === 'dark' 
+                    ? 'bg-white text-black hover:bg-white/90' 
+                    : 'bg-black text-white hover:bg-black/90'
+                }`}
+              >
+                Sign Up
+              </Link>
+            </div>
+
             {/* Theme toggle */}
             <div className="transition-transform duration-300 hover:scale-110">
               <ThemeToggle />
@@ -244,6 +264,35 @@ export default function Navbar() {
               {item.name}
             </a>
           ))}
+          {/* Login and Signup in mobile menu */}
+          <div className="flex space-x-2 px-3 pt-4 pb-2">
+            <Link
+              to="src\components\auth\login.jsx"
+              style={{
+                transitionDelay: `${navItems.length * 50}ms`,
+              }}
+              className={`flex-1 text-center px-3 py-2 text-sm font-medium text-primary border border-primary/60 rounded-md hover:bg-primary/10 transition-all duration-300 ${
+                isOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+              }`}
+            >
+              Log In
+            </Link>
+            <Link
+              to="src\components\auth\signup.jsx"
+              style={{
+                transitionDelay: `${(navItems.length + 1) * 50}ms`,
+              }}
+              className={`flex-1 text-center px-3 py-2 text-sm font-medium rounded-md shadow-sm transition-all duration-300 ${
+                isOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+              } ${
+                theme === 'dark' 
+                  ? 'bg-white text-black hover:bg-white/90' 
+                  : 'bg-black text-white hover:bg-black/90'
+              }`}
+            >
+              Sign Up
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
