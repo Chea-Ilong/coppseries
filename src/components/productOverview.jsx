@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
-import { products } from "../section";
+import { products } from "../MouseSection";
 import { gsap } from "gsap";
 import { useTheme } from "../context/ThemeContext";
 
@@ -80,15 +80,28 @@ export default function ProductOverview() {
                   Add to Cart
                 </button>
               </div>
-
               <div className="mt-10 border-t border-gray-200 dark:border-gray-700 pt-10">
-                <h3 className="text-sm font-medium text-primary">Details</h3>
-                <div className="prose prose-sm mt-4 text-secondary">
-                  <p>
-                    This premium {product.name} is designed for maximum
-                    performance and comfort.
-                  </p>
-                  <p>Perfect for both casual use and professional settings.</p>
+                <h3 className="text-sm font-medium text-primary mb-4">
+                  Description
+                </h3>
+                <div className="prose prose-sm text-secondary mb-8">
+                  <p>{product.description.overview}</p>
+                </div>
+
+                <h3 className="text-sm font-medium text-primary mb-4">
+                  Tech Specs
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-secondary ">
+                  {Object.entries(product.description.specs).map(
+                    ([key, value]) => (
+                      <div key={key} className="flex flex-col">
+                        <span className="text-xs uppercase font-medium">
+                          {key.replace(/([A-Z])/g, " $1").trim()}
+                        </span>
+                        <span className="text-sm">{value}</span>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
             </div>
