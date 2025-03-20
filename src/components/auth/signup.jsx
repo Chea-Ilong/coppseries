@@ -7,7 +7,8 @@ import { useAuth } from "./AuthContext"
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -17,7 +18,7 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { register } = useAuth()
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target
@@ -39,6 +40,9 @@ const SignUp = () => {
     }
 
     try {
+      // Combine first and last name for backward compatibility
+      const fullName = `${formData.firstName} ${formData.lastName}`.trim()
+
       // First try to connect to the mock server
       try {
         const response = await fetch("http://localhost:3002/api/signup", {
@@ -49,7 +53,9 @@ const SignUp = () => {
           body: JSON.stringify({
             email: formData.email,
             password: formData.password,
-            fullName: formData.fullName,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            fullName: fullName,
           }),
           // Set a timeout to avoid waiting too long if server is down
           signal: AbortSignal.timeout(5000), // Increased timeout to 5 seconds
@@ -69,7 +75,13 @@ const SignUp = () => {
         // Wait for animation to complete
         setTimeout(() => {
           // Auto login after successful signup
-          login(data.token)
+          register({
+            ...data,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            fullName: fullName,
+            email: formData.email,
+          })
 
           // Navigate to home page
           navigate("/")
@@ -88,16 +100,23 @@ const SignUp = () => {
       // Log signup attempt
       console.log("Signup attempt with:", formData)
 
-      // Create a mock token
-      const mockToken = "test-token-" + Date.now()
+      // Create a mock user object
+      const mockUser = {
+        id: "user-" + Date.now(),
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+        createdAt: new Date().toISOString(),
+      }
 
       // Show success animation
       setIsSuccess(true)
 
       // Wait for animation to complete
       setTimeout(() => {
-        // Use the login function from AuthContext
-        login(mockToken)
+        // Use the register function from AuthContext
+        register(mockUser)
 
         // Navigate to home page
         navigate("/")
@@ -231,20 +250,37 @@ const SignUp = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.3 }}
             >
-              <div>
-                <label htmlFor="fullName" className="block mb-2 text-sm font-medium text-primary">
-                  Your full name
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  id="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="bg-input-bg border border-input-border text-primary rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5"
-                  placeholder="Tep Piseth"
-                  required
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-primary">
+                    First name
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    id="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="bg-input-bg border border-input-border text-primary rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5"
+                    placeholder="Tep"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-primary">
+                    Last name
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    id="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="bg-input-bg border border-input-border text-primary rounded-lg focus:ring-accent focus:border-accent block w-full p-2.5"
+                    placeholder="Piseth"
+                    required
+                  />
+                </div>
               </div>
               <div>
                 <label htmlFor="email" className="block mb-2 text-sm font-medium text-primary">
@@ -338,9 +374,8 @@ const SignUp = () => {
               <motion.button
                 type="submit"
                 disabled={isLoading || isSuccess}
-                className={`w-full bg-primary hover:bg-primary/80 focus:ring-4 focus:outline-none focus:ring-accent/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors duration-300 border-2 border-border ${
-                  isLoading || isSuccess ? "opacity-70 cursor-not-allowed" : ""
-                }`}
+                className={`w-full bg-primary hover:bg-primary/80 focus:ring-4 focus:outline-none focus:ring-accent/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors duration-300 border-2 border-border ${isLoading || isSuccess ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
                 whileHover={{ scale: isLoading || isSuccess ? 1 : 1.01 }}
                 whileTap={{ scale: isLoading || isSuccess ? 1 : 0.98 }}
               >
