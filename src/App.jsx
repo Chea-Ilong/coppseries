@@ -1,5 +1,4 @@
-"use client";
-
+import React from "react";
 import "./App.css";
 import "./styles/theme.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -11,6 +10,8 @@ import Footer from "./components/footer";
 import ProductOverview from "./components/productOverview";
 import CartPage from "./components/cart-page";
 import AccountPage from "./components/account-page";
+import AboutUs from "./components/aboutUs"; // Import AboutUs page
+import ContactUs from "./components/contactUs"; // Import ContactUs page
 import { ThemeProvider } from "./context/ThemeContext";
 import Login from "./components/auth/login";
 import SignUp from "./components/auth/signup";
@@ -45,7 +46,7 @@ export default function App() {
                 <Routes>
                   <Route
                     path="/"
-                    element={
+                    element={(
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -54,7 +55,7 @@ export default function App() {
                         <Carousel />
                         <Section />
                       </motion.div>
-                    }
+                    )}
                   />
                   <Route path="/product/:id" element={<ProductOverview />} />
                   <Route path="/cart" element={<CartPage />} />
@@ -62,6 +63,8 @@ export default function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<SignUp />} />
                   <Route path="/forget-password" element={<ForgetPassword />} />
+                  <Route path="/about" element={<AboutUs />} /> // Route for About Us
+                  <Route path="/contact" element={<ContactUs />} /> // Route for Contact Us
                 </Routes>
               </main>
               <motion.div

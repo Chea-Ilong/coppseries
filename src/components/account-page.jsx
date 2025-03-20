@@ -5,18 +5,32 @@ import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import { useAuth } from "./auth/AuthContext"
 import { useTheme } from "../context/ThemeContext"
+import { useNavigate } from "react-router-dom";
 
 export default function AccountPage() {
-  const { user, updateProfile, isLoggedIn } = useAuth()
+  const { user, updateProfile, isLoggedIn, logout } = useAuth()
   const { theme } = useTheme()
   const accountRef = useRef(null)
   const [isEditing, setIsEditing] = useState(false)
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
-    email: user?.email || "",
     phone: user?.phone || "",
+    email: user?.email || "",
   })
+  const [isMobile, setIsMobile] = useState(false)
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Detect mobile viewport
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    handleResize() // Initial check
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   useEffect(() => {
     // Animate elements on mount
@@ -54,6 +68,11 @@ export default function AccountPage() {
     } catch (error) {
       console.error('Error updating profile:', error)
     }
+  }
+
+  const handleSignOut = () => {
+    logout()
+    navigate("/login")
   }
 
   if (!isLoggedIn) {
@@ -145,7 +164,7 @@ export default function AccountPage() {
                 >
                   Edit Profile
                 </button>
-              </div>
+              </div>  
               <div className="grid gap-4">
                 <div>
                   <p className="font-semibold">Name:</p>
@@ -160,6 +179,14 @@ export default function AccountPage() {
                   <p>{user?.phone || 'Not provided'}</p>
                 </div>
               </div>
+              {isMobile && (
+                <button
+                  onClick={handleSignOut}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                >
+                  Sign Out
+                </button>
+              )}
             </div>
           )}
         </div>

@@ -299,28 +299,30 @@ export default function CartPage() {
                 >
                   Promo Code
                 </label>
-                <div className="flex">
+                <div className="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4">
                   <input
                     type="text"
                     id="promo"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-primary/20 rounded-l-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    className="flex-1 px-3 py-2 border border-primary/20 rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 md:w-64"
                     placeholder="Enter code"
                   />
-                  <button
-                    type="submit"
-                    className={`px-4 py-2 rounded-r-md font-medium transition-all duration-300 ${
-                      theme === "dark"
-                        ? "bg-white text-black hover:bg-white/90"
-                        : "bg-black text-white hover:bg-black/90"
-                    }`}
-                  >
-                    Apply
-                  </button>
+                  <div className="flex-none md:ml-auto">
+                    <button
+                      type="submit"
+                      className={`px-4 py-2 rounded-md font-medium transition-all duration-300 ${
+                        theme === "dark"
+                          ? "bg-white text-black hover:bg-white/90"
+                          : "bg-black text-white hover:bg-black/90"
+                      }`}
+                    >
+                      Apply
+                    </button>
+                  </div>
                 </div>
                 {promoApplied && (
-                  <p className="text-green-500 text-sm mt-2">
+                  <p className="text-green-500 text-sm mt-2 text-center">
                     Promo code applied successfully!
                   </p>
                 )}

@@ -18,7 +18,6 @@
   --color-nav-bg: #ffffff;
   --color-footer-bg: #f9fafb;
   --color-footer-text: #4b5563;
-  --logo-filter: none;
 }
 [data-theme='dark'] {
   --color-text-primary: #ffffff;

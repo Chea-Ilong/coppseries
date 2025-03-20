@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { navItems } from "../Navbar";
 import { ThemeToggle } from "../context/ThemeToggle";
 import { useTheme } from "../context/ThemeContext";
-import { useAuth } from "./auth/AuthContext";
+import { useAuth } from "../components/auth/AuthContext";
 import { useCart } from "./context/CartContext";
 
 export default function Navbar() {
@@ -26,7 +26,6 @@ export default function Navbar() {
     getCartCount,
   } = useCart();
   const navigate = useNavigate();
-  const location = useLocation();
 
   // Add scroll event listener to detect when user scrolls
   useEffect(() => {
@@ -69,13 +68,6 @@ export default function Navbar() {
     };
   }, [isCartOpen, isUserMenuOpen]);
 
-  // Close mobile menu and dropdowns when route changes
-  useEffect(() => {
-    setIsOpen(false);
-    setIsCartOpen(false);
-    setIsUserMenuOpen(false);
-  }, [location.pathname]);
-
   // Handle logout with animation
   const handleLogout = () => {
     setIsLoggingOut(true);
@@ -84,24 +76,17 @@ export default function Navbar() {
     // Delay the actual logout to allow animation to play
     setTimeout(() => {
       logout();
-      navigate("/");
+      navigate("/login");
       setIsLoggingOut(false);
     }, 800); // Match this with the animation duration
   };
 
-  // Navigate to checkout
-  function handleCheckout() {
-    setIsCartOpen(false);
-    navigate("/cart");
-  }
-
-  // Handle account navigation
-  const handleAccountNavigation = () => {
-    setIsUserMenuOpen(false);
-    if (!isLoggedIn) {
-      navigate("/login");
+  // Navigate to cart page
+  const handleCartClick = () => {
+    if (window.innerWidth < 768) {
+      navigate("/cart");
     } else {
-      navigate("/account");
+      setIsCartOpen(!isCartOpen);
     }
   };
 
@@ -121,10 +106,6 @@ export default function Navbar() {
       return "Account";
     }
   };
-
-  // Debug logging
-  console.log("Navbar render - isLoggedIn:", isLoggedIn);
-  console.log("Navbar render - user:", user);
 
   return (
     <>
@@ -188,8 +169,9 @@ export default function Navbar() {
       </AnimatePresence>
 
       <nav
-        className={`bg-nav shadow transition-all duration-300 ease-in-out ${isScrolled ? "py-1" : "py-3"
-          }`}
+        className={`bg-nav shadow transition-all duration-300 ease-in-out ${
+          isScrolled ? "py-1" : "py-3"
+        }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -200,7 +182,7 @@ export default function Navbar() {
                 className="text-xl font-bold text-primary transform transition-transform duration-300 hover:scale-105"
               >
                 <img
-                  src="src\assets\CS-logo-removebg-preview.png"
+                  src="src/assets/CS-logo-removebg-preview.png"
                   alt="logo"
                   className="h-12 w-auto transition-all duration-300"
                   style={{ filter: "var(--logo-filter)" }}
@@ -231,7 +213,7 @@ export default function Navbar() {
                     <input
                       type="text"
                       placeholder="Search..."
-                      className="search-input transition-all duration-300 focus:ring-2 focus:ring-primary focus:outline-none lg:w-64 md:w-48"
+                      className="search-input transition-all duration-300 focus:ring-primary focus:outline-none lg:w-64 md:w-48"
                       aria-label="Search"
                     />
                     <svg
@@ -329,10 +311,7 @@ export default function Navbar() {
                 <div className="relative">
                   <motion.button
                     id="cartButton"
-                    onClick={() => {
-                      setIsCartOpen(!isCartOpen);
-                      setIsUserMenuOpen(false);
-                    }}
+                    onClick={handleCartClick}
                     className="p-2 rounded-full hover:bg-primary/10 active:bg-primary/20 
                       transition-all duration-300 ease-in-out
                       flex items-center text-primary"
@@ -357,7 +336,7 @@ export default function Navbar() {
                       </svg>
                       {getCartCount() > 0 && (
                         <motion.span
-                          className="absolute -top-2 -right-2 bg-accent text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center"
+                          className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow"
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           key={getCartCount()} // This forces the animation to run when count changes
@@ -378,7 +357,6 @@ export default function Navbar() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2 }}
                     >
-                      {/* Cart dropdown content remains the same */}
                       <div className="px-4 py-2 border-b border-primary/10">
                         <h3 className="text-lg font-medium text-primary">
                           Your Cart
@@ -498,14 +476,16 @@ export default function Navbar() {
                           </span>
                         </div>
                         <button
-                          onClick={handleCheckout}
-                          className={`w-full text-center py-2 px-4 rounded-md font-medium transition-all duration-300 ${cartItems.length === 0
+                          onClick={() => navigate("/cart")}
+                          className={`w-full text-center py-2 px-4 rounded-md font-medium transition-all duration-300 ${
+                            cartItems.length === 0
                               ? "opacity-50 cursor-not-allowed"
                               : ""
-                            } ${theme === "dark"
+                          } ${
+                            theme === "dark"
                               ? "bg-white text-black hover:bg-white/90"
                               : "bg-black text-white hover:bg-black/90"
-                            }`}
+                          }`}
                           disabled={cartItems.length === 0}
                         >
                           View Cart
@@ -516,18 +496,21 @@ export default function Navbar() {
                 </div>
               )}
 
-              {/* User account dropdown for logged-in users */}
               {isLoggedIn ? (
                 <div className="relative">
                   <motion.button
                     id="userButton"
                     onClick={() => {
-                      setIsUserMenuOpen(!isUserMenuOpen);
-                      setIsCartOpen(false);
+                      if (window.innerWidth < 768) {
+                        navigate("/account"); // Directly navigate to account page on small screens
+                      } else {
+                        setIsUserMenuOpen(!isUserMenuOpen); // Toggle dropdown on larger screens
+                        setIsCartOpen(false);
+                      }
                     }}
                     className="p-2 rounded-full hover:bg-primary/10 active:bg-primary/20 
-                      transition-all duration-300 ease-in-out
-                      flex items-center text-primary"
+        transition-all duration-300 ease-in-out
+        flex items-center text-primary"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     aria-label="User menu"
@@ -572,37 +555,28 @@ export default function Navbar() {
                     >
                       <ul className="py-2">
                         <li>
-                          <button
-                            onClick={() => {
-                              setIsUserMenuOpen(false);
-                              navigate("/account");
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
+                          <Link
+                            to="/account"
+                            className="block px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
                           >
                             My Account
-                          </button>
+                          </Link>
                         </li>
                         <li>
-                          <button
-                            onClick={() => {
-                              setIsUserMenuOpen(false);
-                              navigate("/cart");
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
+                          <Link
+                            to="/cart"
+                            className="block px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
                           >
                             My Orders
-                          </button>
+                          </Link>
                         </li>
                         <li>
-                          <button
-                            onClick={() => {
-                              setIsUserMenuOpen(false);
-                              navigate("/settings");
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
+                          <Link
+                            to="/settings"
+                            className="block px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
                           >
                             Settings
-                          </button>
+                          </Link>
                         </li>
                         <li className="border-t border-primary/10">
                           <button
@@ -627,16 +601,16 @@ export default function Navbar() {
                   </Link>
                   <Link
                     to="/signup"
-                    className={`lg:px-3 md:px-2 py-1.5 text-sm font-medium rounded-md shadow-sm transition-all duration-300 ease-in-out ${theme === "dark"
+                    className={`lg:px-3 md:px-2 py-1.5 text-sm font-medium rounded-md shadow-sm transition-all duration-300 ease-in-out ${
+                      theme === "dark"
                         ? "bg-white text-black hover:bg-white/90"
                         : "bg-black text-white hover:bg-black/90"
-                      }`}
+                    }`}
                   >
                     Sign Up
                   </Link>
                 </div>
               )}
-
               {/* Theme toggle */}
               <div className="transition-transform duration-300 hover:scale-110">
                 <ThemeToggle />
@@ -696,10 +670,11 @@ export default function Navbar() {
 
         {/* Mobile menu with animation */}
         <div
-          className={`transition-all duration-300 ease-in-out transform ${isOpen
+          className={`transition-all duration-300 ease-in-out transform ${
+            isOpen
               ? "opacity-100 max-h-96"
               : "opacity-0 max-h-0 overflow-hidden"
-            } md:hidden`}
+          } md:hidden`}
           id="mobile-menu"
         >
           <div className="pt-2 pb-3 space-y-1">
@@ -710,108 +685,19 @@ export default function Navbar() {
                 style={{
                   transitionDelay: `${index * 50}ms`,
                 }}
-                className={`text-primary hover-accent block px-3 py-2 text-base font-medium transform transition-all duration-300 ${isOpen
+                className={`text-primary hover-accent block px-3 py-2 text-base font-medium transform transition-all duration-300 ${
+                  isOpen
                     ? "translate-x-0 opacity-100"
                     : "translate-x-8 opacity-0"
-                  }`}
+                }`}
               >
                 {item.name}
               </a>
             ))}
 
-            {/* Show cart and account links in mobile menu when logged in */}
+            {/* Show cart link in mobile menu when logged in */}
             {isLoggedIn ? (
-              <>
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    navigate("/cart");
-                  }}
-                  style={{
-                    transitionDelay: `${navItems.length * 50}ms`,
-                  }}
-                  className={`text-primary hover-accent flex items-center px-3 py-2 text-base font-medium transform transition-all duration-300 w-full text-left ${isOpen
-                      ? "translate-x-0 opacity-100"
-                      : "translate-x-8 opacity-0"
-                    }`}
-                >
-                  <svg
-                    className="h-5 w-5 mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                  My Cart
-                  {getCartCount() > 0 && (
-                    <span className="ml-2 bg-accent text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                      {getCartCount()}
-                    </span>
-                  )}
-                </button>
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    navigate("/account");
-                  }}
-                  style={{
-                    transitionDelay: `${(navItems.length + 1) * 50}ms`,
-                  }}
-                  className={`text-primary hover-accent flex items-center px-3 py-2 text-base font-medium transform transition-all duration-300 w-full text-left ${isOpen
-                      ? "translate-x-0 opacity-100"
-                      : "translate-x-8 opacity-0"
-                    }`}
-                >
-                  <svg
-                    className="h-5 w-5 mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    />
-                  </svg>
-                  My Account
-                </button>
-                <button
-                  onClick={handleLogout}
-                  style={{
-                    transitionDelay: `${(navItems.length + 2) * 50}ms`,
-                  }}
-                  className={`text-primary hover-accent flex items-center px-3 py-2 text-base font-medium transform transition-all duration-300 w-full text-left ${isOpen
-                      ? "translate-x-0 opacity-100"
-                      : "translate-x-8 opacity-0"
-                    }`}
-                >
-                  <svg
-                    className="h-5 w-5 mr-2"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                    />
-                  </svg>
-                  Sign Out
-                </button>
-              </>
+              <></>
             ) : (
               /* Login and Signup in mobile menu when not logged in */
               <div className="flex space-x-2 px-3 pt-4 pb-2">
@@ -820,10 +706,11 @@ export default function Navbar() {
                   style={{
                     transitionDelay: `${navItems.length * 50}ms`,
                   }}
-                  className={`flex-1 text-center px-3 py-2 text-sm font-medium text-primary border border-primary/60 rounded-md hover:bg-primary/10 transition-all duration-300 ${isOpen
+                  className={`flex-1 text-center px-3 py-2 text-sm font-medium text-primary border border-primary/60 rounded-md hover:bg-primary/10 transition-all duration-300 ${
+                    isOpen
                       ? "translate-x-0 opacity-100"
                       : "translate-x-8 opacity-0"
-                    }`}
+                  }`}
                 >
                   Log In
                 </Link>
@@ -832,13 +719,15 @@ export default function Navbar() {
                   style={{
                     transitionDelay: `${(navItems.length + 1) * 50}ms`,
                   }}
-                  className={`flex-1 text-center px-3 py-2 text-sm font-medium rounded-md shadow-sm transition-all duration-300 ${isOpen
+                  className={`flex-1 text-center px-3 py-2 text-sm font-medium rounded-md shadow-sm transition-all duration-300 ${
+                    isOpen
                       ? "translate-x-0 opacity-100"
                       : "translate-x-8 opacity-0"
-                    } ${theme === "dark"
+                  } ${
+                    theme === "dark"
                       ? "bg-white text-black hover:bg-white/90"
                       : "bg-black text-white hover:bg-black/90"
-                    }`}
+                  }`}
                 >
                   Sign Up
                 </Link>
