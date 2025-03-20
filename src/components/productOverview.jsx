@@ -1,18 +1,24 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { products } from "../MouseSection";
 import { gsap } from "gsap";
 import { useTheme } from "../context/ThemeContext";
+import { useCart } from "../components/context/CartContext";
+import { motion } from "framer-motion";
 
 export default function ProductOverview() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [addedToCart, setAddedToCart] = useState(false);
   const productRef = useRef(null);
   const { theme } = useTheme();
+  const { addToCart } = useCart();
 
   useEffect(() => {
-    const foundProduct = products.find((p) => p.id === parseInt(id));
+    const foundProduct = products.find((p) => p.id === Number.parseInt(id));
     setProduct(foundProduct);
   }, [id]);
 
@@ -41,6 +47,20 @@ export default function ProductOverview() {
     setQuantity(quantity + 1);
   };
 
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart(product, quantity);
+
+      // Show added to cart animation
+      setAddedToCart(true);
+
+      // Reset after animation completes
+      setTimeout(() => {
+        setAddedToCart(false);
+      }, 1500);
+    }
+  };
+
   if (!product) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -65,7 +85,7 @@ export default function ProductOverview() {
           <div className="shrink-0 max-w-md lg:max-w-lg mx-auto">
             <img
               className="w-full rounded-lg"
-              src={product.imageSrc}
+              src={product.imageSrc || "/placeholder.svg"}
               alt={product.imageAlt}
             />
           </div>
@@ -82,20 +102,18 @@ export default function ProductOverview() {
                 <button
                   onClick={decreaseQuantity}
                   className={`px-3 py-1 text-lg text-primary focus:outline-none transition-all duration-150 ${
-                    theme === "light"
-                      ? "hover:bg-gray-50"
-                      : "hover:bg-gray-800"
+                    theme === "light" ? "hover:bg-gray-50" : "hover:bg-gray-800"
                   }`}
                 >
                   -
                 </button>
-                <span className="px-3 py-1 text-primary border-l border-r border-gray-300 dark:border-gray-700">{quantity}</span>
+                <span className="px-3 py-1 text-primary border-l border-r border-gray-300 dark:border-gray-700">
+                  {quantity}
+                </span>
                 <button
                   onClick={increaseQuantity}
                   className={`px-3 py-1 text-lg text-primary focus:outline-none transition-all duration-150 ${
-                    theme === "light"
-                      ? "hover:bg-gray-50"
-                      : "hover:bg-gray-800"
+                    theme === "light" ? "hover:bg-gray-50" : "hover:bg-gray-800"
                   }`}
                 >
                   +
@@ -103,19 +121,40 @@ export default function ProductOverview() {
               </div>
             </div>
             <div className="mt-4 space-y-6">
-              {/* <p className="text-lg text-secondary">Color: {product.color}</p>
-              <p className="text-base text-secondary">{product.imageAlt}</p> */}
-
-              <div className="mt-8">
+              <div className="mt-8 relative">
                 <button
                   type="button"
+                  onClick={handleAddToCart}
                   className={`w-full rounded-md bg-button px-5 py-3 text-base font-medium shadow-sm hover:bg-button-hover focus:outline-none transition-all duration-200 ease-in-out ${
                     theme === "light"
                       ? "text-gray-900 border border-transparent hover:border-gray-300"
                       : "text-white border border-gray-700 hover:border-gray-500"
                   }`}
                 >
-                  Add to Cart
+                  {addedToCart ? (
+                    <motion.div
+                      initial={{ scale: 0.8, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      className="flex items-center justify-center"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </motion.div>
+                  ) : (
+                    "Add to Cart"
+                  )}
                 </button>
               </div>
               <div className="mt-10 border-t border-gray-200 dark:border-gray-700 pt-10">

@@ -1,59 +1,65 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+"use client"
+
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { motion } from "framer-motion"
+import { useAuth } from "./AuthContext"
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     remember: false,
-  });
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  })
+  const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked } = e.target
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+    }))
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+    e.preventDefault()
+    setError("")
+    setIsLoading(true)
 
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // Simulate a delay for the loading state
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        navigate("/");
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Login failed");
-      }
+      // Skip API call and directly log in
+      console.log("Login attempt with:", formData)
+
+      // Create a mock token
+      const mockToken = "test-token-" + Date.now()
+
+      // Use the login function from AuthContext
+      login(mockToken)
+
+      // Navigate to home page
+      navigate("/")
     } catch (err) {
-      setError("An error occurred. Please try again.");
+      setError("An error occurred during login")
+    } finally {
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <motion.section 
+    <motion.section
       className="bg-bg-primary"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <motion.div 
+      <motion.div
         className="flex flex-col items-center justify-center px-6 py-4 mx-auto min-h-[calc(100vh-80px)] lg:py-0"
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -73,14 +79,14 @@ const Login = () => {
             style={{ filter: "var(--logo-filter)" }}
           />
         </motion.a>
-        <motion.div 
+        <motion.div
           className="w-full bg-card-bg rounded-lg shadow border border-border md:mt-0 sm:max-w-md xl:p-0"
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.4 }}
         >
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <motion.h1 
+            <motion.h1
               className="text-xl font-bold leading-tight tracking-tight text-primary md:text-2xl"
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -89,7 +95,7 @@ const Login = () => {
               Sign in to your account
             </motion.h1>
             {error && (
-              <motion.div 
+              <motion.div
                 className="text-red-600 bg-red-100 p-3 rounded-lg text-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -98,18 +104,15 @@ const Login = () => {
                 {error}
               </motion.div>
             )}
-            <motion.form 
-              className="space-y-4 md:space-y-6" 
+            <motion.form
+              className="space-y-4 md:space-y-6"
               onSubmit={handleSubmit}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.3 }}
             >
               <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-primary"
-                >
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-primary">
                   Your email
                 </label>
                 <input
@@ -124,10 +127,7 @@ const Login = () => {
                 />
               </div>
               <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-primary"
-                >
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-primary">
                   Password
                 </label>
                 <input
@@ -157,23 +157,23 @@ const Login = () => {
                       relative z-10"
                       whileTap={{ scale: 0.9 }}
                     />
-                    <motion.div 
+                    <motion.div
                       className="absolute inset-0 z-20 pointer-events-none"
                       initial={{ scale: 0, opacity: 0 }}
-                      animate={{ 
+                      animate={{
                         scale: formData.remember ? 1 : 0,
-                        opacity: formData.remember ? 1 : 0
+                        opacity: formData.remember ? 1 : 0,
                       }}
                       transition={{ duration: 0.2 }}
                     >
                       <svg className="w-4 h-4 text-accent" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z"/>
+                        <path d="M16.707 5.293a1 1 0 0 1 0 1.414l-8 8a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 1.414-1.414L8 12.586l7.293-7.293a1 1 0 0 1 1.414 0z" />
                       </svg>
                     </motion.div>
                   </div>
                   <div className="ml-3 text-sm">
-                    <label 
-                      htmlFor="remember" 
+                    <label
+                      htmlFor="remember"
                       className="text-secondary hover:text-primary cursor-pointer 
                       transition-all duration-300 ease-in-out
                       select-none"
@@ -193,16 +193,45 @@ const Login = () => {
               </div>
               <motion.button
                 type="submit"
-                className="w-full bg-primary hover:bg-primary/80 focus:ring-4 focus:outline-none focus:ring-accent/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors duration-300 border-2 border-border"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
+                disabled={isLoading}
+                className={`w-full bg-primary hover:bg-primary/80 focus:ring-4 focus:outline-none focus:ring-accent/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors duration-300 border-2 border-border ${
+                  isLoading ? "opacity-70 cursor-not-allowed" : ""
+                }`}
+                whileHover={{ scale: isLoading ? 1 : 1.01 }}
+                whileTap={{ scale: isLoading ? 1 : 0.98 }}
               >
-                Sign in
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <svg
+                      className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    Signing in...
+                  </div>
+                ) : (
+                  "Sign in"
+                )}
               </motion.button>
               <p className="text-sm font-light text-primary">
                 Don't have an account yet?{" "}
-                <motion.a 
-                  href="signup" 
+                <motion.a
+                  href="signup"
                   className="font-medium text-accent hover:underline"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -215,7 +244,8 @@ const Login = () => {
         </motion.div>
       </motion.div>
     </motion.section>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
+
