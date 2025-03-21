@@ -55,7 +55,7 @@ export default function CartPage() {
   };
 
   const subtotal = Number.parseFloat(getTotalPrice());
-  const tax = subtotal * 0.08; // 8% tax
+  const tax = subtotal * 0.1; 
   const shipping = subtotal > 100 ? 0 : 10; // Free shipping over $100
   const total = subtotal + tax + shipping - discount;
 
@@ -268,7 +268,7 @@ export default function CartPage() {
                   <span>${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-primary">
-                  <span>Tax (8%)</span>
+                  <span>Tax (10%)</span>
                   <span>${tax.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-primary">

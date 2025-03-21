@@ -1,98 +1,106 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { Link } from "react-router-dom"
-import { motion } from "framer-motion"
-import { useAuth } from "./auth/AuthContext"
-import { useTheme } from "../context/ThemeContext"
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useAuth } from "./auth/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import { useNavigate } from "react-router-dom";
 
 export default function AccountPage() {
-  const { user, updateProfile, isLoggedIn, logout } = useAuth()
-  const { theme } = useTheme()
-  const accountRef = useRef(null)
-  const [isEditing, setIsEditing] = useState(false)
+  const { user, updateProfile, isLoggedIn, logout } = useAuth();
+  const { theme } = useTheme();
+  const accountRef = useRef(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     phone: user?.phone || "",
     email: user?.email || "",
-  })
-  const [isMobile, setIsMobile] = useState(false)
+  });
+  const [isMobile, setIsMobile] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Detect mobile viewport
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
+      setIsMobile(window.innerWidth < 768);
+    };
 
-    handleResize() // Initial check
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     // Animate elements on mount
     if (accountRef.current) {
-      const elements = accountRef.current.querySelectorAll(".animate-in")
+      const elements = accountRef.current.querySelectorAll(".animate-in");
       elements.forEach((el, index) => {
-        el.style.opacity = "0"
-        el.style.transform = "translateY(20px)"
+        el.style.opacity = "0";
+        el.style.transform = "translateY(20px)";
 
-        setTimeout(
-          () => {
-            el.style.transition = "all 0.5s ease"
-            el.style.opacity = "1"
-            el.style.transform = "translateY(0)"
-          },
-          index * 100
-        )
-      })
+        setTimeout(() => {
+          el.style.transition = "all 0.5s ease";
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+        }, index * 100);
+      });
     }
-  }, [])
+  }, []);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
+    const { name, value } = e.target;
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await updateProfile(formData)
-      setIsEditing(false)
+      await updateProfile(formData);
+      setIsEditing(false);
     } catch (error) {
-      console.error('Error updating profile:', error)
+      console.error("Error updating profile:", error);
     }
-  }
+  };
 
   const handleSignOut = () => {
-    logout()
-    navigate("/login")
-  }
+    logout();
+    navigate("/login");
+  };
 
   if (!isLoggedIn) {
     return (
-      <div className={`min-h-screen p-8 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+      <div
+        className={`min-h-screen p-8 ${
+          theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        }`}
+      >
         <div className="max-w-md mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-4">Please log in to view your account</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            Please log in to view your account
+          </h2>
           <Link to="/login" className="text-blue-500 hover:text-blue-600">
             Go to Login
           </Link>
         </div>
       </div>
-    )
+    );
   }
 
   return (
-    <div ref={accountRef} className={`min-h-screen p-8 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+    <div
+      ref={accountRef}
+      className={`min-h-screen p-8 ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+      }`}
+    >
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 animate-in">My Account</h1>
-        
+
         <div className="bg-opacity-50 backdrop-blur-lg rounded-lg p-6 shadow-lg animate-in">
           {isEditing ? (
             <form onSubmit={handleSubmit}>
@@ -104,7 +112,9 @@ export default function AccountPage() {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    className="w-full p-2 rounded border text-gray-900"
+                    className={`w-full p-2 rounded border text-gray-900 ${
+                      theme === "dark" ? "text-white" : ""
+                    }`}
                   />
                 </div>
                 <div>
@@ -114,7 +124,9 @@ export default function AccountPage() {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    className="w-full p-2 rounded border text-gray-900"
+                    className={`w-full p-2 rounded border text-gray-900 ${
+                      theme === "dark" ? "text-white" : ""
+                    }`}
                   />
                 </div>
                 <div>
@@ -124,7 +136,9 @@ export default function AccountPage() {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full p-2 rounded border text-gray-900"
+                    className={`w-full p-2 rounded border text-gray-900 ${
+                      theme === "dark" ? "text-white" : ""
+                    }`}
                   />
                 </div>
                 <div>
@@ -134,7 +148,9 @@ export default function AccountPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full p-2 rounded border text-gray-900"
+                    className={`w-full p-2 rounded border text-gray-900 ${
+                      theme === "dark" ? "text-white" : ""
+                    }`}
                   />
                 </div>
               </div>
@@ -164,11 +180,13 @@ export default function AccountPage() {
                 >
                   Edit Profile
                 </button>
-              </div>  
+              </div>
               <div className="grid gap-4">
                 <div>
                   <p className="font-semibold">Name:</p>
-                  <p>{user?.firstName} {user?.lastName}</p>
+                  <p>
+                    {user?.firstName} {user?.lastName}
+                  </p>
                 </div>
                 <div>
                   <p className="font-semibold">Email:</p>
@@ -176,7 +194,7 @@ export default function AccountPage() {
                 </div>
                 <div>
                   <p className="font-semibold">Phone:</p>
-                  <p>{user?.phone || 'Not provided'}</p>
+                  <p>{user?.phone || "Not provided"}</p>
                 </div>
               </div>
               {isMobile && (
@@ -192,5 +210,5 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
