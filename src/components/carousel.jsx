@@ -173,7 +173,7 @@ const Carousel = () => {
             aria-label="Previous slide"
             className="absolute left-4 z-10 p-3 rounded-full bg-black/50 text-white
             transition-all duration-300 hover:bg-black/75 active:scale-95
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
+            focus:outline-none focus:ring-offset-2 focus:ring-white"
           >
             <SlArrowLeft className="w-6 h-6" />
           </button>
@@ -208,7 +208,7 @@ const Carousel = () => {
                   className="inline-block px-6 py-2 bg-white text-black rounded-full
                   transform transition-all duration-300
                   hover:bg-opacity-90 hover:scale-105 active:scale-95
-                  focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+                  focus:outline-none focus:ring-white focus:ring-offset-2"
                 >
                   Explore More
                 </a>
@@ -221,7 +221,7 @@ const Carousel = () => {
             aria-label="Next slide"
             className="absolute right-4 z-10 p-3 rounded-full bg-black/50 text-white
             transition-all duration-300 hover:bg-black/75 active:scale-95
-            focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
+            focus:outline-none focus:ring-offset-2 focus:ring-white"
           >
             <SlArrowRight className="w-6 h-6" />
           </button>

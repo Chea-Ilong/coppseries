@@ -12,7 +12,6 @@ import { searchCategories } from "./searchCategories";
 
 // Technology categories data
 
-
 // Sample recent searches - in a real app, these would come from localStorage or a database
 const recentSearches = [
   "Gaming Laptops",
@@ -486,7 +485,7 @@ export default function Navbar() {
                         bg-nav/80 text-primary transition-all duration-300
                         ${
                           isSearchFocused
-                            ? "border-primary/40 ring-2 ring-primary/10"
+                            ? "border-primary/40 ring-1 ring-primary/10"
                             : ""
                         }
                         focus:outline-none`}
@@ -597,20 +596,6 @@ export default function Navbar() {
                     }}
                   >
                     <span className="inline mr-2">Search</span>
-                    <svg
-                      className="h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
                   </motion.button>
                 </motion.div>
 
@@ -842,7 +827,7 @@ export default function Navbar() {
                                         removeFromCart(item.id);
                                       }
                                     }}
-                                    className="p-1 rounded-md hover:bg-primary/10 text-primary/70"
+                                    className={`p-1 rounded-md hover:bg-primary/10 text-primary/70`}
                                     aria-label="Decrease quantity"
                                   >
                                     <svg
@@ -867,7 +852,7 @@ export default function Navbar() {
                                     onClick={() =>
                                       updateQuantity(item.id, item.quantity + 1)
                                     }
-                                    className="p-1 rounded-md hover:bg-primary/10 text-primary/70"
+                                    className={`p-1 rounded-md hover:bg-primary/10 text-primary/70`}
                                     aria-label="Increase quantity"
                                   >
                                     <svg
@@ -1013,7 +998,7 @@ export default function Navbar() {
                         </li>
                         <li>
                           <Link
-                            to="/cart"
+                            to="/my-orders"
                             className="block px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
                           >
                             My Orders

@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { motion } from "framer-motion";
 import Navbar from "./components/navbar";
 import Carousel from "./components/carousel";
+import ShopCategories from "./components/shopCategories";
 import Section from "./components/section";
 import Footer from "./components/footer";
 import ProductOverview from "./components/productOverview";
@@ -18,6 +19,8 @@ import SignUp from "./components/auth/signup";
 import ForgetPassword from "./components/auth/forgetPassword";
 import { AuthProvider } from "./components/auth/AuthContext";
 import { CartProvider } from "../src/components/context/CartContext";
+import CheckoutPage from "./components/checkout-page";
+import MyOrders from "./components/my-orders";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -46,7 +49,7 @@ export default function App() {
                 <Routes>
                   <Route
                     path="/"
-                    element={(
+                    element={
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -55,16 +58,19 @@ export default function App() {
                         <Carousel />
                         <Section />
                       </motion.div>
-                    )}
+                    }
                   />
+                  <Route path="/shop" element={<ShopCategories />} />
                   <Route path="/product/:id" element={<ProductOverview />} />
                   <Route path="/cart" element={<CartPage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route path="/my-orders" element={<MyOrders />} />
                   <Route path="/account" element={<AccountPage />} />
                   <Route path="/login" element={<Login />} />
                   <Route path="/signup" element={<SignUp />} />
                   <Route path="/forget-password" element={<ForgetPassword />} />
-                  <Route path="/about" element={<AboutUs />} /> // Route for About Us
-                  <Route path="/contact" element={<ContactUs />} /> // Route for Contact Us
+                  <Route path="/about" element={<AboutUs />} />
+                  <Route path="/contact" element={<ContactUs />} />
                 </Routes>
               </main>
               <motion.div
