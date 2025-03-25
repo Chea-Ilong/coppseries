@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useAuth } from "../auth/AuthContext";
 
 // Create the cart context
 const CartContext = createContext();
@@ -14,29 +15,37 @@ export const useCart = () => {
 
 // Cart provider component
 export const CartProvider = ({ children }) => {
+  const { user } = useAuth();
   // Initialize cart from localStorage if available
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : [];
   });
-  
+
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems]);
 
+  useEffect(() => {
+    // Clear cart when auth state changes (login/logout/signup)
+    clearCart();
+  }, [user]);
+
   // Add item to cart
   const addToCart = (product, quantity) => {
-    setCartItems(prevItems => {
+    setCartItems((prevItems) => {
       // Check if item already exists in cart
-      const existingItemIndex = prevItems.findIndex(item => item.id === product.id);
-      
+      const existingItemIndex = prevItems.findIndex(
+        (item) => item.id === product.id
+      );
+
       if (existingItemIndex >= 0) {
         // Update quantity if item exists
         const updatedItems = [...prevItems];
         updatedItems[existingItemIndex] = {
           ...updatedItems[existingItemIndex],
-          quantity: updatedItems[existingItemIndex].quantity + quantity
+          quantity: updatedItems[existingItemIndex].quantity + quantity,
         };
         return updatedItems;
       } else {
@@ -48,13 +57,15 @@ export const CartProvider = ({ children }) => {
 
   // Remove item from cart
   const removeFromCart = (productId) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
+    setCartItems((prevItems) =>
+      prevItems.filter((item) => item.id !== productId)
+    );
   };
 
   // Update item quantity
   const updateQuantity = (productId, quantity) => {
-    setCartItems(prevItems => 
-      prevItems.map(item => 
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
         item.id === productId ? { ...item, quantity } : item
       )
     );
@@ -67,11 +78,13 @@ export const CartProvider = ({ children }) => {
 
   // Calculate total price
   const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => {
-      // Remove currency symbol and convert to number
-      const price = parseFloat(item.price.replace(/[^0-9.]/g, ''));
-      return total + (price * item.quantity);
-    }, 0).toFixed(2);
+    return cartItems
+      .reduce((total, item) => {
+        // Remove currency symbol and convert to number
+        const price = parseFloat(item.price.replace(/[^0-9.]/g, ""));
+        return total + price * item.quantity;
+      }, 0)
+      .toFixed(2);
   };
 
   // Get total number of items
@@ -87,7 +100,7 @@ export const CartProvider = ({ children }) => {
     updateQuantity,
     clearCart,
     getTotalPrice,
-    getCartCount
+    getCartCount,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
