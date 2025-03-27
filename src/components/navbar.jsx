@@ -10,7 +10,6 @@ import { useAuth } from "../components/auth/AuthContext";
 import { useCart } from "./context/CartContext";
 import { searchCategories } from "./searchCategories";
 
-// Technology categories data
 
 // Sample recent searches - in a real app, these would come from localStorage or a database
 const recentSearches = [

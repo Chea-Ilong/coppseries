@@ -11,8 +11,8 @@ import Footer from "./components/footer";
 import ProductOverview from "./components/productOverview";
 import CartPage from "./components/cart-page";
 import AccountPage from "./components/account-page";
-import AboutUs from "./components/aboutUs"; // Import AboutUs page
-import ContactUs from "./components/contactUs"; // Import ContactUs page
+import AboutUs from "./components/aboutUs"; 
+import ContactUs from "./components/contactUs";
 import { ThemeProvider } from "./context/ThemeContext";
 import Login from "./components/auth/login";
 import SignUp from "./components/auth/signup";

@@ -1,124 +1,110 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { Link } from "react-router-dom"
-import { motion } from "framer-motion"
-import { useAuth } from "./auth/AuthContext"
-import { useTheme } from "../context/ThemeContext"
-import { useNavigate } from "react-router-dom"
-import { Package, Settings, LogOut, User, ShoppingBag } from "lucide-react"
+import { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Package, Settings, LogOut, User, ShoppingBag } from "lucide-react";
+import { useAuth } from "./auth/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function AccountPage() {
-  const { user, updateProfile, isLoggedIn, logout } = useAuth()
-  const { theme } = useTheme()
-  const accountRef = useRef(null)
-  const [isEditing, setIsEditing] = useState(false)
+  const { user, updateProfile, isLoggedIn, logout } = useAuth();
+  const { theme } = useTheme();
+  const accountRef = useRef(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
     phone: user?.phone || "",
     email: user?.email || "",
-  })
-  const [isMobile, setIsMobile] = useState(false)
-  const [activeSection, setActiveSection] = useState("profile")
-  const navigate = useNavigate()
+  });
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeSection, setActiveSection] = useState("profile");
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+
+  // Load orders from localStorage
+  useEffect(() => {
+    try {
+      const savedOrders = JSON.parse(localStorage.getItem("orders") || "[]");
+      // Sort orders by date (newest first)
+      savedOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+      setOrders(savedOrders);
+    } catch (error) {
+      console.error("Error loading orders:", error);
+      setOrders([]);
+    }
+  }, []);
 
   useEffect(() => {
     // Detect mobile viewport
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
+      setIsMobile(window.innerWidth < 768);
+    };
 
-    handleResize() // Initial check
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    handleResize(); // Initial check
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     // Animate elements on mount
     if (accountRef.current) {
-      const elements = accountRef.current.querySelectorAll(".animate-in")
+      const elements = accountRef.current.querySelectorAll(".animate-in");
       elements.forEach((el, index) => {
-        el.style.opacity = "0"
-        el.style.transform = "translateY(20px)"
+        el.style.opacity = "0";
+        el.style.transform = "translateY(20px)";
 
         setTimeout(() => {
-          el.style.transition = "all 0.5s ease"
-          el.style.opacity = "1"
-          el.style.transform = "translateY(0)"
-        }, index * 100)
-      })
+          el.style.transition = "all 0.5s ease";
+          el.style.opacity = "1";
+          el.style.transform = "translateY(0)";
+        }, index * 100);
+      });
     }
-  }, [])
+  }, []);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      await updateProfile(formData)
-      setIsEditing(false)
+      await updateProfile(formData);
+      setIsEditing(false);
     } catch (error) {
-      console.error("Error updating profile:", error)
+      console.error("Error updating profile:", error);
     }
-  }
+  };
 
   const handleSignOut = () => {
-    logout()
-    navigate("/login")
-  }
+    logout();
+    router.push("/login");
+  };
 
   if (!isLoggedIn) {
     return (
-      <div className={`min-h-screen p-8 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+      <div
+        className={`min-h-screen p-8 ${
+          theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        }`}
+      >
         <div className="max-w-md mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-4">Please log in to view your account</h2>
-          <Link to="/login" className="text-blue-500 hover:text-blue-600">
+          <h2 className="text-2xl font-bold mb-4">
+            Please log in to view your account
+          </h2>
+          <Link href="/login" className="text-blue-500 hover:text-blue-600">
             Go to Login
           </Link>
         </div>
       </div>
-    )
+    );
   }
-
-  // Sample order data - in a real app, this would come from an API
-  const orders = [
-    {
-      id: "ORD-12345",
-      date: "March 15, 2024",
-      status: "Delivered",
-      total: "$249.99",
-      items: [
-        { name: "Gaming Keyboard", price: "$129.99", quantity: 1 },
-        { name: "Wireless Mouse", price: "$59.99", quantity: 2 },
-      ],
-    },
-    {
-      id: "ORD-12344",
-      date: "February 28, 2024",
-      status: "Shipped",
-      total: "$899.99",
-      items: [
-        { name: '27" 4K Monitor', price: "$499.99", quantity: 1 },
-        { name: "USB-C Hub", price: "$49.99", quantity: 1 },
-        { name: "Mechanical Keyboard", price: "$149.99", quantity: 1 },
-        { name: "Wireless Headphones", price: "$199.99", quantity: 1 },
-      ],
-    },
-    {
-      id: "ORD-12343",
-      date: "January 10, 2024",
-      status: "Delivered",
-      total: "$1,299.99",
-      items: [{ name: "Gaming Laptop", price: "$1,299.99", quantity: 1 }],
-    },
-  ]
 
   const renderMobileNavigation = () => {
     return (
@@ -164,8 +150,8 @@ export default function AccountPage() {
           Settings
         </button>
       </div>
-    )
-  }
+    );
+  };
 
   const renderProfileSection = () => {
     return (
@@ -181,7 +167,9 @@ export default function AccountPage() {
                   value={formData.firstName}
                   onChange={handleInputChange}
                   className={`w-full p-2 rounded border ${
-                    theme === "dark" ? "bg-gray-800 text-white" : "text-gray-900"
+                    theme === "dark"
+                      ? "bg-gray-800 text-white"
+                      : "text-gray-900"
                   }`}
                 />
               </div>
@@ -193,7 +181,9 @@ export default function AccountPage() {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   className={`w-full p-2 rounded border ${
-                    theme === "dark" ? "bg-gray-800 text-white" : "text-gray-900"
+                    theme === "dark"
+                      ? "bg-gray-800 text-white"
+                      : "text-gray-900"
                   }`}
                 />
               </div>
@@ -205,7 +195,9 @@ export default function AccountPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   className={`w-full p-2 rounded border ${
-                    theme === "dark" ? "bg-gray-800 text-white" : "text-gray-900"
+                    theme === "dark"
+                      ? "bg-gray-800 text-white"
+                      : "text-gray-900"
                   }`}
                 />
               </div>
@@ -217,13 +209,18 @@ export default function AccountPage() {
                   value={formData.phone}
                   onChange={handleInputChange}
                   className={`w-full p-2 rounded border ${
-                    theme === "dark" ? "bg-gray-800 text-white" : "text-gray-900"
+                    theme === "dark"
+                      ? "bg-gray-800 text-white"
+                      : "text-gray-900"
                   }`}
                 />
               </div>
             </div>
             <div className="flex gap-4">
-              <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
                 Save Changes
               </button>
               <button
@@ -239,7 +236,10 @@ export default function AccountPage() {
           <div className="space-y-4">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold">Profile Information</h2>
-              <button onClick={() => setIsEditing(true)} className="text-blue-500 hover:text-blue-600">
+              <button
+                onClick={() => setIsEditing(true)}
+                className="text-blue-500 hover:text-blue-600"
+              >
                 Edit Profile
               </button>
             </div>
@@ -271,8 +271,8 @@ export default function AccountPage() {
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   const renderOrdersSection = () => {
     return (
@@ -297,20 +297,28 @@ export default function AccountPage() {
                   }`}
                 >
                   <div>
-                    <p className="font-bold">{order.id}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{order.date}</p>
+                    <p className="font-bold">#{order.id}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {new Date(order.date).toLocaleDateString(undefined, {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
                   </div>
                   <div className="text-right">
                     <span
                       className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${
                         order.status === "Delivered"
                           ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                          : order.status === "Shipped"
+                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
                           : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                       }`}
                     >
                       {order.status}
                     </span>
-                    <p className="font-bold mt-1">{order.total}</p>
+                    <p className="font-bold mt-1">${order.total}</p>
                   </div>
                 </div>
 
@@ -319,18 +327,26 @@ export default function AccountPage() {
                   <ul className="space-y-2">
                     {order.items.map((item, index) => (
                       <li key={index} className="flex justify-between">
-                        <span>
-                          {item.name} × {item.quantity}
-                        </span>
+                        <Link
+                          to={`/product/${item.id}`}
+                          className="hover:text-accent hover:underline"
+                        >
+                          <span>
+                            {item.name} × {item.quantity}
+                          </span>
+                        </Link>
                         <span>{item.price}</span>
                       </li>
                     ))}
                   </ul>
 
                   <div className="mt-4 flex justify-end">
-                    <button className="text-blue-500 hover:text-blue-600 text-sm font-medium">
-                      View Order Details
-                    </button>
+                  <Link
+  to={`/product/${order.items[0]?.id}`}
+  className="text-blue-500 hover:text-blue-600 text-sm font-medium"
+>
+  View Order Details
+</Link
                   </div>
                 </div>
               </motion.div>
@@ -340,15 +356,20 @@ export default function AccountPage() {
           <div className="text-center py-8">
             <Package className="w-12 h-12 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-medium mb-2">No orders yet</h3>
-            <p className="text-gray-500 dark:text-gray-400 mb-4">You haven't placed any orders yet.</p>
-            <Link to="/" className="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+            <p className="text-gray-500 dark:text-gray-400 mb-4">
+              You haven&apos;t placed any orders yet.
+            </p>
+            <Link
+              href="/"
+              className="inline-block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
               Start Shopping
             </Link>
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   const renderSettingsSection = () => {
     return (
@@ -376,30 +397,54 @@ export default function AccountPage() {
 
           <div>
             <h3 className="font-medium mb-2">Password</h3>
-            <button className="text-blue-500 hover:text-blue-600">Change Password</button>
+            <button className="text-blue-500 hover:text-blue-600">
+              Change Password
+            </button>
           </div>
 
           <div>
             <h3 className="font-medium mb-2">Payment Methods</h3>
-            <button className="text-blue-500 hover:text-blue-600">Manage Payment Methods</button>
+            <button className="text-blue-500 hover:text-blue-600">
+              Manage Payment Methods
+            </button>
           </div>
 
           <div>
             <h3 className="font-medium mb-2">Shipping Addresses</h3>
-            <button className="text-blue-500 hover:text-blue-600">Manage Addresses</button>
+            <button className="text-blue-500 hover:text-blue-600">
+              Manage Addresses
+            </button>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
-  return (
-    <div
-      ref={accountRef}
-      className={`min-h-screen p-4 md:p-8 ${theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
-    >
+  let content = null;
+
+  if (!isLoggedIn) {
+    content = (
+      <div
+        className={`min-h-screen p-8 ${
+          theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        }`}
+      >
+        <div className="max-w-md mx-auto text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            Please log in to view your account
+          </h2>
+          <Link href="/login" className="text-blue-500 hover:text-blue-600">
+            Go to Login
+          </Link>
+        </div>
+      </div>
+    );
+  } else {
+    content = (
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 animate-in">My Account</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-8 animate-in">
+          My Account
+        </h1>
 
         {isMobile && renderMobileNavigation()}
 
@@ -407,7 +452,17 @@ export default function AccountPage() {
         {activeSection === "orders" && renderOrdersSection()}
         {activeSection === "settings" && renderSettingsSection()}
       </div>
-    </div>
-  )
-}
+    );
+  }
 
+  return (
+    <div
+      ref={accountRef}
+      className={`min-h-screen p-4 md:p-8 ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+      }`}
+    >
+      {content}
+    </div>
+  );
+}
