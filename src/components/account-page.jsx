@@ -341,12 +341,12 @@ export default function AccountPage() {
                   </ul>
 
                   <div className="mt-4 flex justify-end">
-                  <Link
-  to={`/product/${order.items[0]?.id}`}
-  className="text-blue-500 hover:text-blue-600 text-sm font-medium"
->
-  View Order Details
-</Link
+                    <Link
+                      to={`/product/${order.items[0]?.id}`}
+                      className="text-blue-500 hover:text-blue-600 text-sm font-medium"
+                    >
+                      View Order Details
+                    </Link>
                   </div>
                 </div>
               </motion.div>
