@@ -212,7 +212,7 @@ const SignUp = () => {
           transition={{ delay: 0.2, duration: 0.3 }}
         >
           <img
-            src="src\assets\CS-logo-removebg-preview.png"
+            src="CS-logo-removebg-preview.png"
             alt="logo"
             className="h-24 w-auto transition-all duration-300"
             style={{ filter: "var(--logo-filter)" }}

@@ -10,7 +10,7 @@ const Footer = () => {
             {/* Logo */}
             <a href="/" className="flex items-center gap-3">
             <img 
-                src="src\assets\CS-logo-removebg-preview.png" 
+                src="CS-logo-removebg-preview.png" 
                 className="h-12 w-auto transition-all duration-300"
                 style={{ filter: 'var(--logo-filter)' }}
                 alt="CoppSeries Logo" 

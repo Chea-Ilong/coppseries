@@ -449,7 +449,7 @@ export default function Navbar() {
                 className="text-xl font-bold text-primary transform transition-transform duration-300 hover:scale-105"
               >
                 <img
-                  src="src/assets/CS-logo-removebg-preview.png"
+                  src="CS-logo-removebg-preview.png"
                   alt="logo"
                   className="h-12 w-auto transition-all duration-300"
                   style={{ filter: "var(--logo-filter)" }}
