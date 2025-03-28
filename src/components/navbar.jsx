@@ -59,12 +59,10 @@ export default function Navbar() {
   const desktopSearchContainerRef = useRef(null);
   const mobileSearchContainerRef = useRef(null);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  // Add these new state variables after the other useState declarations
   const [isFullScreenSearchActive, setIsFullScreenSearchActive] =
     useState(false);
   const [searchCategory, setSearchCategory] = useState("all");
   const fullScreenSearchRef = useRef(null);
-  // Add these new state variables for category functionality
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [expandedMobileCategories, setExpandedMobileCategories] = useState({});
   const [isMobile, setIsMobile] = useState(false);
@@ -113,8 +111,6 @@ export default function Navbar() {
   // Handle search submission
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      // In a real app, you would include the category in the search URL
-      // or handle it in your search logic
       const searchUrl =
         searchCategory === "all"
           ? `/search?q=${encodeURIComponent(searchTerm.trim())}`
@@ -122,7 +118,6 @@ export default function Navbar() {
               searchTerm.trim()
             )}&category=${searchCategory}`;
 
-      // Save to recent searches (would be implemented in a real app)
       navigate(searchUrl);
       setShowSuggestions(false);
     }
@@ -131,7 +126,6 @@ export default function Navbar() {
   // Add this function to handle opening the full-screen search
   const openFullScreenSearch = () => {
     setIsFullScreenSearchActive(true);
-    // Focus the search input after a small delay to allow the animation to start
     setTimeout(() => {
       if (fullScreenSearchRef.current) {
         fullScreenSearchRef.current.focus();
@@ -245,12 +239,11 @@ export default function Navbar() {
     setIsLoggingOut(true);
     setIsUserMenuOpen(false);
 
-    // Delay the actual logout to allow animation to play
     setTimeout(() => {
       logout();
       navigate("/login");
       setIsLoggingOut(false);
-    }, 800); // Match this with the animation duration
+    }, 800);
   };
 
   // Navigate to cart page
@@ -269,10 +262,8 @@ export default function Navbar() {
     if (user.firstName) {
       return user.firstName;
     } else if (user.name) {
-      // If there's a full name, get the first part
       return user.name.split(" ")[0];
     } else if (user.email) {
-      // If no name, use the part of email before @
       return user.email.split("@")[0];
     } else {
       return "Account";
@@ -282,18 +273,15 @@ export default function Navbar() {
   // Toggle categories menu
   const toggleCategories = () => {
     setIsCategoriesOpen(!isCategoriesOpen);
-    // Close other menus when opening categories
     if (!isCategoriesOpen) {
       setIsOpen(false);
       setIsSearchOpen(false);
       setIsCartOpen(false);
       setIsUserMenuOpen(false);
 
-      // Reset expanded categories when opening menu
       if (isMobile) {
         setExpandedMobileCategories({});
       } else {
-        // Set the first category as default selected when opening on desktop
         setSelectedCategory(searchCategories[0]?.name || null);
       }
     }
@@ -651,7 +639,6 @@ export default function Navbar() {
                       }}
                       onBlur={() => {
                         setIsSearchFocused(false);
-                        // Don't hide suggestions immediately to allow clicking on them
                         setTimeout(() => {
                           if (
                             !desktopSearchContainerRef.current?.contains(
@@ -920,7 +907,7 @@ export default function Navbar() {
                           className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow"
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
-                          key={getCartCount()} // This forces the animation to run when count changes
+                          key={getCartCount()}
                         >
                           {getCartCount()}
                         </motion.span>
@@ -1143,22 +1130,6 @@ export default function Navbar() {
                             My Account
                           </Link>
                         </li>
-                        <li>
-                          <Link
-                            to="/my-orders"
-                            className="block px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
-                          >
-                            My Orders
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="/settings"
-                            className="block px-4 py-2 text-sm text-primary hover:bg-primary/10 transition-all duration-300"
-                          >
-                            Settings
-                          </Link>
-                        </li>
                         <li className="border-t border-primary/10">
                           <button
                             onClick={handleLogout}
@@ -1195,55 +1166,6 @@ export default function Navbar() {
               {/* Theme toggle */}
               <div className="transition-transform duration-300 hover:scale-110">
                 <ThemeToggle />
-              </div>
-
-              {/* Mobile menu button - only visible on tablet */}
-              <div className="hidden md:block lg:hidden">
-                <button
-                  type="button"
-                  className="inline-flex items-center justify-center p-2 rounded-md text-primary hover-accent transition-colors duration-300"
-                  aria-controls="mobile-menu"
-                  aria-expanded={isOpen}
-                  onClick={() => {
-                    setIsSearchOpen(false);
-                    setIsOpen(!isOpen);
-                  }}
-                >
-                  <span className="sr-only">
-                    {isOpen ? "Close menu" : "Open menu"}
-                  </span>
-                  {isOpen ? (
-                    <svg
-                      className="h-6 w-6 transition-transform duration-300 rotate-90"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="h-6 w-6 transition-transform duration-300"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 6h16M4 12h16M4 18h16"
-                      />
-                    </svg>
-                  )}
-                </button>
               </div>
             </div>
 
@@ -1286,7 +1208,6 @@ export default function Navbar() {
                   </div>
                 </Link>
               )}
-
               {isLoggedIn ? (
                 <Link
                   to="/account"
@@ -1330,7 +1251,6 @@ export default function Navbar() {
               )}
             </div>
           </div>
-
           {/* Mobile: Categories and Search bar on second line */}
           <div className="md:hidden flex items-center space-x-2 py-2 border-t border-primary/10">
             {/* Categories Button for Mobile */}
@@ -1369,20 +1289,20 @@ export default function Navbar() {
                     type="text"
                     placeholder="Search products..."
                     className="w-full h-10 pl-4 pr-10 rounded-l-full 
-            border border-r-0 border-primary/20 
-            bg-nav/80 text-primary transition-all duration-300
-            focus:outline-none mobile-search-input cursor-pointer"
+        border border-r-0 border-primary/20 
+        bg-nav/80 text-primary transition-all duration-300
+        focus:outline-none mobile-search-input cursor-pointer"
                     readOnly
                   />
                 </div>
 
                 <motion.button
                   className={`h-10 px-3 rounded-r-full flex items-center justify-center
-          transition-all duration-300 ${
-            theme === "dark"
-              ? "bg-white text-black hover:bg-white/90"
-              : "bg-black text-white hover:bg-black/90"
-          }`}
+      transition-all duration-300 ${
+        theme === "dark"
+          ? "bg-white text-black hover:bg-white/90"
+          : "bg-black text-white hover:bg-black/90"
+      }`}
                   whileHover={{
                     scale: 1.05,
                     transition: { type: "spring", stiffness: 400, damping: 10 },
@@ -1472,8 +1392,8 @@ export default function Navbar() {
                         type="text"
                         placeholder="Search products, brands, categories..."
                         className="w-full h-12 pl-4 pr-12 rounded-full border border-primary/20 
-                bg-nav/80 text-primary transition-all duration-300
-                focus:outline-none focus:ring-2 focus:ring-primary/20"
+            bg-nav/80 text-primary transition-all duration-300
+            focus:outline-none focus:ring-2 focus:ring-primary/20"
                         value={searchTerm}
                         onChange={(e) => {
                           setSearchTerm(e.target.value);
@@ -1545,11 +1465,11 @@ export default function Navbar() {
                     {/* Search Button */}
                     <motion.button
                       className={`w-full h-12 rounded-full flex items-center justify-center font-medium
-              transition-all duration-300 ${
-                theme === "dark"
-                  ? "bg-white text-black hover:bg-white/90"
-                  : "bg-black text-white hover:bg-black/90"
-              }`}
+          transition-all duration-300 ${
+            theme === "dark"
+              ? "bg-white text-black hover:bg-white/90"
+              : "bg-black text-white hover:bg-black/90"
+          }`}
                       onClick={() => {
                         handleSearch();
                         closeFullScreenSearch();
