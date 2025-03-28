@@ -9,7 +9,7 @@ import { useTheme } from "../context/ThemeContext";
 import { useAuth } from "../components/auth/AuthContext";
 import { useCart } from "./context/CartContext";
 import { searchCategories } from "./searchCategories";
-
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 // Sample recent searches - in a real app, these would come from localStorage or a database
 const recentSearches = [
@@ -64,6 +64,10 @@ export default function Navbar() {
     useState(false);
   const [searchCategory, setSearchCategory] = useState("all");
   const fullScreenSearchRef = useRef(null);
+  // Add these new state variables for category functionality
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [expandedMobileCategories, setExpandedMobileCategories] = useState({});
+  const [isMobile, setIsMobile] = useState(false);
 
   const cssVariables = {
     "--primary-rgb": theme === "dark" ? "255, 255, 255" : "0, 0, 0",
@@ -77,6 +81,28 @@ export default function Navbar() {
         ? "0 6px 16px rgba(0, 0, 0, 0.4)"
         : "0 6px 16px rgba(0, 0, 0, 0.15)",
     ...mobileSearchStyles,
+  };
+
+  // Check if we're on mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkIfMobile();
+    window.addEventListener("resize", checkIfMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkIfMobile);
+    };
+  }, []);
+
+  // Toggle mobile category expansion
+  const toggleMobileCategory = (categoryName) => {
+    setExpandedMobileCategories((prev) => ({
+      ...prev,
+      [categoryName]: !prev[categoryName],
+    }));
   };
 
   // Filter suggestions based on search term
@@ -262,6 +288,14 @@ export default function Navbar() {
       setIsSearchOpen(false);
       setIsCartOpen(false);
       setIsUserMenuOpen(false);
+
+      // Reset expanded categories when opening menu
+      if (isMobile) {
+        setExpandedMobileCategories({});
+      } else {
+        // Set the first category as default selected when opening on desktop
+        setSelectedCategory(searchCategories[0]?.name || null);
+      }
     }
   };
 
@@ -330,7 +364,7 @@ export default function Navbar() {
       <AnimatePresence>
         {isCategoriesOpen && (
           <motion.div
-            className="fixed inset-0 bg-nav z-40 overflow-y-auto"
+            className="fixed inset-0 bg-nav z-40 overflow-y-auto categories-menu-container"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -361,44 +395,158 @@ export default function Navbar() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                {searchCategories.map((category, index) => (
-                  <motion.div
-                    key={category.name}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="mb-6"
-                  >
-                    <h3 className="text-lg font-semibold text-primary mb-3 border-b border-primary/10 pb-2">
-                      {category.name}
-                    </h3>
-                    <ul className="space-y-2">
-                      {category.subcategories.map((subcategory, subIndex) => (
-                        <motion.li
-                          key={subcategory.name}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{
-                            duration: 0.3,
-                            delay: index * 0.1 + subIndex * 0.05,
-                          }}
+              {/* Desktop Categories Layout */}
+              <div className="hidden md:grid md:grid-cols-5 gap-8">
+                {/* Categories Navigation - Left Side */}
+                <div className="md:col-span-1 border-r border-primary/10 pr-4">
+                  <ul className="space-y-2">
+                    {searchCategories.map((category, index) => (
+                      <motion.li
+                        key={category.name}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        className="mb-2"
+                      >
+                        <div
+                          onClick={() => setSelectedCategory(category.name)}
+                          className={`text-lg font-semibold text-primary py-2 px-3 rounded-lg cursor-pointer transition-all duration-200 ${
+                            selectedCategory === category.name
+                              ? "bg-primary/10"
+                              : "hover:bg-primary/5"
+                          }`}
                         >
-                          <Link
-                            to={subcategory.href}
-                            className="text-primary/80 hover:text-primary transition-colors duration-300 hover:underline flex items-center"
-                            onClick={toggleCategories}
+                          {category.name}
+                        </div>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Subcategories - Right Side */}
+                <div className="md:col-span-4">
+                  {searchCategories.map((category) => (
+                    <motion.div
+                      key={`subcategories-${category.name}`}
+                      className={`${
+                        selectedCategory === category.name ? "block" : "hidden"
+                      }`}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <h3 className="text-xl font-semibold text-primary mb-4 border-b border-primary/10 pb-2">
+                        {category.name}
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {category.subcategories.map((subcategory, subIndex) => (
+                          <motion.div
+                            key={subcategory.name}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                              duration: 0.3,
+                              delay: subIndex * 0.05,
+                            }}
                           >
-                            <span className="text-primary/40 mr-2">•</span>
-                            {subcategory.name}
-                          </Link>
-                        </motion.li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                ))}
+                            <Link
+                              to={subcategory.href}
+                              className="text-primary/80 hover:text-primary transition-colors duration-300 hover:underline flex items-center group"
+                              onClick={toggleCategories}
+                            >
+                              <span className="text-primary/40 mr-2 group-hover:text-accent transition-colors duration-300">
+                                •
+                              </span>
+                              {subcategory.name}
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  ))}
+
+                  {/* Default view when no category is selected */}
+                  {!selectedCategory && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-center py-12"
+                    >
+                      <p className="text-primary/70 text-lg">
+                        Select a category to see subcategories
+                      </p>
+                    </motion.div>
+                  )}
+                </div>
               </div>
 
+              {/* Mobile Categories Layout - Accordion Style */}
+              <div className="md:hidden">
+                <div className="space-y-4">
+                  {searchCategories.map((category, index) => (
+                    <motion.div
+                      key={category.name}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                      className="border border-primary/10 rounded-lg overflow-hidden"
+                    >
+                      <button
+                        onClick={() => toggleMobileCategory(category.name)}
+                        className={`w-full flex justify-between items-center p-4 text-left text-lg font-medium text-primary ${
+                          expandedMobileCategories[category.name]
+                            ? "bg-primary/10"
+                            : "bg-primary/5"
+                        }`}
+                      >
+                        <span>{category.name}</span>
+                        <motion.div
+                          animate={{
+                            rotate: expandedMobileCategories[category.name]
+                              ? 180
+                              : 0,
+                          }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <ChevronDown className="h-5 w-5 text-primary/70" />
+                        </motion.div>
+                      </button>
+
+                      <AnimatePresence>
+                        {expandedMobileCategories[category.name] && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="p-4 bg-primary/5 space-y-3">
+                              {category.subcategories.map((subcategory) => (
+                                <Link
+                                  key={subcategory.name}
+                                  to={subcategory.href}
+                                  className="block py-2 px-3 rounded-md text-primary/80 hover:text-primary hover:bg-primary/10 transition-all duration-200"
+                                  onClick={toggleCategories}
+                                >
+                                  <div className="flex items-center">
+                                    <ChevronRight className="h-4 w-4 mr-2 text-primary/50" />
+                                    {subcategory.name}
+                                  </div>
+                                </Link>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Popular Searches Section - Both Mobile and Desktop */}
               <div className="mt-8 pt-6 border-t border-primary/10">
                 <h3 className="text-lg font-semibold text-primary mb-4">
                   Popular Searches
@@ -1537,7 +1685,13 @@ export default function Navbar() {
             <div className="flex space-x-8">
               {/* Categories Button for Desktop - on the same line as nav links */}
               <motion.button
-                onClick={toggleCategories}
+                onClick={() => {
+                  toggleCategories();
+                  if (!isCategoriesOpen) {
+                    // Set the first category as default selected when opening
+                    setSelectedCategory(searchCategories[0]?.name || null);
+                  }
+                }}
                 className="flex items-center text-primary hover:text-accent transition-colors duration-300 focus:outline-none border-transparent border-b-2 hover:border-primary"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
