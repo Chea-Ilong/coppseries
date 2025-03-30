@@ -564,7 +564,7 @@ export default function AccountPage() {
                               </div>
                               <div>
                                 <Link
-                                  to={`/product/${item.id}`}
+                                  to={`/product-overview/${item.id}`}
                                   className="font-medium hover:text-blue-500 hover:underline transition-colors"
                                 >
                                   {item.name}
@@ -598,7 +598,7 @@ export default function AccountPage() {
                         )}
                       </div>
                       <Link
-                        to={`/order/${order.id}`}
+                        to="/my-orders"
                         className="flex items-center justify-center gap-1 text-blue-500 hover:text-blue-600 text-sm font-medium transition-colors"
                       >
                         View Order Details
