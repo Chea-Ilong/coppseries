@@ -170,7 +170,9 @@ export default function AccountPage() {
           className={`flex items-center px-4 py-2 rounded-full whitespace-nowrap ${
             activeSection === "profile"
               ? "bg-blue-500 text-white"
-              : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              : theme === "dark"
+                ? "bg-gray-800 text-gray-300"
+                : "bg-gray-200 text-gray-700"
           }`}
         >
           <User className="w-4 h-4 mr-2" />
@@ -181,7 +183,9 @@ export default function AccountPage() {
           className={`flex items-center px-4 py-2 rounded-full whitespace-nowrap ${
             activeSection === "orders"
               ? "bg-blue-500 text-white"
-              : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              : theme === "dark"
+                ? "bg-gray-800 text-gray-300"
+                : "bg-gray-200 text-gray-700"
           }`}
         >
           <Package className="w-4 h-4 mr-2" />
@@ -192,7 +196,9 @@ export default function AccountPage() {
           className={`flex items-center px-4 py-2 rounded-full whitespace-nowrap ${
             activeSection === "settings"
               ? "bg-blue-500 text-white"
-              : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              : theme === "dark"
+                ? "bg-gray-800 text-gray-300"
+                : "bg-gray-200 text-gray-700"
           }`}
         >
           <Settings className="w-4 h-4 mr-2" />
@@ -847,7 +853,9 @@ export default function AccountPage() {
               className={`flex items-center justify-center p-4 rounded-lg ${
                 activeSection === "profile"
                   ? "bg-blue-500 text-white"
-                  : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                  : theme === "dark"
+                    ? "bg-gray-800 text-gray-300"
+                    : "bg-gray-200 text-gray-700"
               }`}
             >
               <User className="w-5 h-5 mr-2" />
@@ -858,7 +866,9 @@ export default function AccountPage() {
               className={`flex items-center justify-center p-4 rounded-lg ${
                 activeSection === "orders"
                   ? "bg-blue-500 text-white"
-                  : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                  : theme === "dark"
+                    ? "bg-gray-800 text-gray-300"
+                    : "bg-gray-200 text-gray-700"
               }`}
             >
               <Package className="w-5 h-5 mr-2" />
@@ -869,7 +879,9 @@ export default function AccountPage() {
               className={`flex items-center justify-center p-4 rounded-lg ${
                 activeSection === "settings"
                   ? "bg-blue-500 text-white"
-                  : "bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                  : theme === "dark"
+                    ? "bg-gray-800 text-gray-300"
+                    : "bg-gray-200 text-gray-700"
               }`}
             >
               <Settings className="w-5 h-5 mr-2" />
