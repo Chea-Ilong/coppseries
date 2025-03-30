@@ -452,16 +452,6 @@ export default function AccountPage() {
                 </div>
               </div>
             </div>
-
-            {isMobile && (
-              <button
-                onClick={handleSignOut}
-                className="w-full flex items-center justify-center gap-2 mt-6 bg-red-500 text-white px-4 py-3 rounded-lg hover:bg-red-600 transition-colors"
-              >
-                <LogOut className="w-4 h-4" />
-                Sign Out
-              </button>
-            )}
           </div>
         )}
       </motion.div>
