@@ -46,15 +46,6 @@ export const searchCategories = [
     ],
   },
   {
-    name: "Mobile Devices",
-    subcategories: [
-      { name: "Smartphones", href: "/category/smartphones" },
-      { name: "Tablets", href: "/category/tablets" },
-      { name: "Smartwatches", href: "/category/smartwatches" },
-      { name: "Accessories", href: "/category/mobile-accessories" },
-    ],
-  },
-  {
     name: "Gaming",
     subcategories: [
       { name: "Consoles", href: "/category/consoles" },
@@ -62,16 +53,6 @@ export const searchCategories = [
       { name: "Games", href: "/category/games" },
       { name: "Gaming Chairs", href: "/category/gaming-chairs" },
       { name: "Gaming Desks", href: "/category/gaming-desks" },
-    ],
-  },
-  {
-    name: "Software",
-    subcategories: [
-      { name: "Operating Systems", href: "/category/operating-systems" },
-      { name: "Office Applications", href: "/category/office-applications" },
-      { name: "Antivirus & Security", href: "/category/antivirus-security" },
-      { name: "Design Software", href: "/category/design-software" },
-      { name: "Development Tools", href: "/category/development-tools" },
     ],
   },
   {
