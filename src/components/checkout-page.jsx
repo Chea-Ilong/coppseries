@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { useCart } from "../components/context/CartContext";
-import { useTheme } from "../context/ThemeContext";
-import { useAuth } from "../components/auth/AuthContext";
+import { useState, useEffect, useRef } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { motion, AnimatePresence } from "framer-motion"
+import { useCart } from "../components/context/CartContext"
+import { useTheme } from "../context/ThemeContext"
+import { useAuth } from "../components/auth/AuthContext"
 
 export default function CheckoutPage() {
-  const { cartItems, getTotalPrice, clearCart } = useCart();
-  const { theme } = useTheme();
-  const { user } = useAuth();
-  const navigate = useNavigate();
+  const { cartItems, getTotalPrice, clearCart } = useCart()
+  const { theme } = useTheme()
+  const { user } = useAuth()
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
@@ -20,92 +20,136 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     zipCode: "",
-    country: "United States",
+    country: "Cambodia",
     paymentMethod: "credit-card",
     cardNumber: "",
     cardName: "",
     expiryDate: "",
     cvv: "",
-  });
-  const [errors, setErrors] = useState({});
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [orderComplete, setOrderComplete] = useState(false);
-  const [orderId, setOrderId] = useState(null);
+  })
+  const [errors, setErrors] = useState({})
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [orderComplete, setOrderComplete] = useState(false)
+  const [orderId, setOrderId] = useState(null)
 
-  const subtotal = Number.parseFloat(getTotalPrice());
-  const tax = subtotal * 0.1;
-  const shipping = subtotal > 100 ? 0 : 10; // Free shipping over $100
-  const total = subtotal + tax + shipping;
+  const [isProvinceDropdownOpen, setIsProvinceDropdownOpen] = useState(false)
+  const provinceDropdownRef = useRef(null)
+
+  // List of Cambodia's 25 provinces
+  const cambodiaProvinces = [
+    "Banteay Meanchey",
+    "Battambang",
+    "Kampong Cham",
+    "Kampong Chhnang",
+    "Kampong Speu",
+    "Kampong Thom",
+    "Kampot",
+    "Kandal",
+    "Kep",
+    "Koh Kong",
+    "Kratie",
+    "Mondulkiri",
+    "Oddar Meanchey",
+    "Pailin",
+    "Phnom Penh",
+    "Preah Vihear",
+    "Prey Veng",
+    "Pursat",
+    "Ratanakiri",
+    "Siem Reap",
+    "Sihanoukville",
+    "Stung Treng",
+    "Svay Rieng",
+    "Takeo",
+    "Tboung Khmum",
+  ]
+
+  const subtotal = Number.parseFloat(getTotalPrice())
+  const tax = subtotal * 0.1
+  const shipping = subtotal > 100 ? 0 : 10 // Free shipping over $100
+  const total = subtotal + tax + shipping
 
   // Redirect to cart if cart is empty
   useEffect(() => {
     if (cartItems.length === 0 && !orderComplete) {
-      navigate("/cart");
+      navigate("/cart")
     }
-  }, [cartItems, navigate, orderComplete]);
+  }, [cartItems, navigate, orderComplete])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (provinceDropdownRef.current && !provinceDropdownRef.current.contains(event.target)) {
+        setIsProvinceDropdownOpen(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target
     setFormData({
       ...formData,
       [name]: value,
-    });
-    
+    })
+
     // Clear error when field is edited
     if (errors[name]) {
       setErrors({
         ...errors,
         [name]: null,
-      });
+      })
     }
-  };
+  }
 
   const validateForm = () => {
-    const newErrors = {};
-    
+    const newErrors = {}
+
     // Basic validation
-    if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    if (!formData.address.trim()) newErrors.address = "Address is required";
-    if (!formData.city.trim()) newErrors.city = "City is required";
-    if (!formData.state.trim()) newErrors.state = "State is required";
-    if (!formData.zipCode.trim()) newErrors.zipCode = "Zip code is required";
-    
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required"
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"
+    if (!formData.email.trim()) newErrors.email = "Email is required"
+    if (!formData.address.trim()) newErrors.address = "Address is required"
+    if (!formData.state.trim()) newErrors.state = "Province is required"
+
     if (formData.paymentMethod === "credit-card") {
-      if (!formData.cardNumber.trim()) newErrors.cardNumber = "Card number is required";
-      if (!formData.cardName.trim()) newErrors.cardName = "Name on card is required";
-      if (!formData.expiryDate.trim()) newErrors.expiryDate = "Expiry date is required";
-      if (!formData.cvv.trim()) newErrors.cvv = "CVV is required";
+      if (!formData.cardNumber.trim()) newErrors.cardNumber = "Card number is required"
+      if (!formData.cardName.trim()) newErrors.cardName = "Name on card is required"
+      if (!formData.expiryDate.trim()) newErrors.expiryDate = "Expiry date is required"
+      if (!formData.cvv.trim()) newErrors.cvv = "CVV is required"
     }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    
+    e.preventDefault()
+
     if (!validateForm()) {
       // Scroll to the first error
-      const firstError = document.querySelector(".error-message");
+      const firstError = document.querySelector(".error-message")
       if (firstError) {
-        firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+        firstError.scrollIntoView({ behavior: "smooth", block: "center" })
       }
-      return;
+      return
     }
-    
+
     // Process order
-    setIsProcessing(true);
-    
+    setIsProcessing(true)
+
     // Simulate order processing
     setTimeout(() => {
       // Generate a random order ID
-      const newOrderId = Math.floor(100000 + Math.random() * 900000).toString();
-      setOrderId(newOrderId);
-      
+      const newOrderId = Math.floor(100000 + Math.random() * 900000).toString()
+      setOrderId(newOrderId)
+
       // Save order to local storage for "My Orders" page
-      const orderDate = new Date().toISOString();
+      const orderDate = new Date().toISOString()
       const newOrder = {
         id: newOrderId,
         date: orderDate,
@@ -115,49 +159,54 @@ export default function CheckoutPage() {
         shippingAddress: {
           name: `${formData.firstName} ${formData.lastName}`,
           address: formData.address,
-          city: formData.city,
           state: formData.state,
-          zipCode: formData.zipCode,
           country: formData.country,
         },
         paymentMethod: formData.paymentMethod === "credit-card" ? "Credit Card" : "PayPal",
-      };
-      
+      }
+
       // Get existing orders or initialize empty array
-      const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]");
-      localStorage.setItem("orders", JSON.stringify([...existingOrders, newOrder]));
-      
+      const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]")
+      localStorage.setItem("orders", JSON.stringify([...existingOrders, newOrder]))
+
       // Clear cart and show success
-      clearCart();
-      setIsProcessing(false);
-      setOrderComplete(true);
-    }, 2000);
-  };
+      clearCart()
+      setIsProcessing(false)
+      setOrderComplete(true)
+    }, 2000)
+  }
+
+  const handleProvinceSelect = (province) => {
+    setFormData({
+      ...formData,
+      state: province,
+    })
+    setIsProvinceDropdownOpen(false)
+  }
+
+  const toggleProvinceDropdown = () => {
+    setIsProvinceDropdownOpen(!isProvinceDropdownOpen)
+  }
 
   if (orderComplete) {
     return (
       <div className="bg-bg-primary py-8 md:py-16 antialiased">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
             <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-6">
-              <svg 
-                className="w-8 h-8 text-green-600" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
+              <svg
+                className="w-8 h-8 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="2" 
-                  d="M5 13l4 4L19 7"
-                ></path>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
               </svg>
             </div>
             <h1 className="text-3xl font-bold text-primary mb-4">Order Confirmed!</h1>
@@ -172,9 +221,7 @@ export default function CheckoutPage() {
               <Link
                 to="/my-orders"
                 className={`px-6 py-3 rounded-md font-medium shadow-sm transition-all duration-300 ${
-                  theme === "dark"
-                    ? "bg-white text-black hover:bg-white/90"
-                    : "bg-black text-white hover:bg-black/90"
+                  theme === "dark" ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-black/90"
                 }`}
               >
                 View My Orders
@@ -189,7 +236,7 @@ export default function CheckoutPage() {
           </motion.div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -197,9 +244,7 @@ export default function CheckoutPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-primary">Checkout</h1>
-          <p className="text-secondary mt-2">
-            Complete your purchase by providing your shipping and payment details.
-          </p>
+          <p className="text-secondary mt-2">Complete your purchase by providing your shipping and payment details.</p>
         </div>
 
         <div className="lg:grid lg:grid-cols-12 lg:gap-12">
@@ -245,9 +290,7 @@ export default function CheckoutPage() {
                           errors.lastName ? "border-red-500" : "border-primary/20"
                         } rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50`}
                       />
-                      {errors.lastName && (
-                        <p className="mt-1 text-sm text-red-500 error-message">{errors.lastName}</p>
-                      )}
+                      {errors.lastName && <p className="mt-1 text-sm text-red-500 error-message">{errors.lastName}</p>}
                     </div>
                   </div>
                   <div>
@@ -264,9 +307,7 @@ export default function CheckoutPage() {
                         errors.email ? "border-red-500" : "border-primary/20"
                       } rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50`}
                     />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-500 error-message">{errors.email}</p>
-                    )}
+                    {errors.email && <p className="mt-1 text-sm text-red-500 error-message">{errors.email}</p>}
                   </div>
                 </div>
               </div>
@@ -291,86 +332,98 @@ export default function CheckoutPage() {
                         errors.address ? "border-red-500" : "border-primary/20"
                       } rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50`}
                     />
-                    {errors.address && (
-                      <p className="mt-1 text-sm text-red-500 error-message">{errors.address}</p>
-                    )}
+                    {errors.address && <p className="mt-1 text-sm text-red-500 error-message">{errors.address}</p>}
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="city" className="block text-sm font-medium text-primary mb-1">
-                        City
-                      </label>
-                      <input
-                        type="text"
-                        id="city"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        className={`w-full px-3 py-2 border ${
-                          errors.city ? "border-red-500" : "border-primary/20"
-                        } rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50`}
-                      />
-                      {errors.city && (
-                        <p className="mt-1 text-sm text-red-500 error-message">{errors.city}</p>
-                      )}
-                    </div>
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
                       <label htmlFor="state" className="block text-sm font-medium text-primary mb-1">
-                        State / Province
+                        Province
                       </label>
-                      <input
-                        type="text"
-                        id="state"
-                        name="state"
-                        value={formData.state}
-                        onChange={handleChange}
-                        className={`w-full px-3 py-2 border ${
-                          errors.state ? "border-red-500" : "border-primary/20"
-                        } rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50`}
-                      />
-                      {errors.state && (
-                        <p className="mt-1 text-sm text-red-500 error-message">{errors.state}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="zipCode" className="block text-sm font-medium text-primary mb-1">
-                        ZIP / Postal Code
-                      </label>
-                      <input
-                        type="text"
-                        id="zipCode"
-                        name="zipCode"
-                        value={formData.zipCode}
-                        onChange={handleChange}
-                        className={`w-full px-3 py-2 border ${
-                          errors.zipCode ? "border-red-500" : "border-primary/20"
-                        } rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50`}
-                      />
-                      {errors.zipCode && (
-                        <p className="mt-1 text-sm text-red-500 error-message">{errors.zipCode}</p>
-                      )}
+                      <div className="relative" ref={provinceDropdownRef}>
+                        <button
+                          type="button"
+                          onClick={toggleProvinceDropdown}
+                          className={`w-full px-3 py-2 border ${
+                            errors.state ? "border-red-500" : "border-primary/20"
+                          } rounded-md text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 flex justify-between items-center transition-colors duration-200 ${
+                            theme === "dark" ? "bg-primary/10 hover:bg-primary/15" : "bg-transparent hover:bg-primary/5"
+                          }`}
+                          aria-haspopup="listbox"
+                          aria-expanded={isProvinceDropdownOpen}
+                        >
+                          <span>{formData.state || "Select Province"}</span>
+                          <motion.svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            animate={{
+                              rotate: isProvinceDropdownOpen ? 180 : 0,
+                            }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
+                          </motion.svg>
+                        </button>
+
+                        <AnimatePresence>
+                          {isProvinceDropdownOpen && (
+                            <motion.div
+                              className={`absolute z-10 mt-1 w-full border border-primary/20 rounded-md shadow-lg max-h-60 overflow-y-auto ${
+                                theme === "dark" ? "bg-gray-800" : "bg-white"
+                              }`} // Added background color classes
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              transition={{ duration: 0.2 }}
+                            >
+                              <ul className="py-1" role="listbox">
+                                {cambodiaProvinces.map((province) => (
+                                  <motion.li
+                                    key={province}
+                                    onClick={() => handleProvinceSelect(province)}
+                                    className={`px-3 py-2 cursor-pointer text-primary transition-colors duration-150 ${
+                                      formData.state === province
+                                        ? theme === "dark"
+                                          ? "bg-primary/20"
+                                          : "bg-primary/10"
+                                        : theme === "dark"
+                                          ? "hover:bg-primary/15"
+                                          : "hover:bg-primary/5"
+                                    }`}
+                                    role="option"
+                                    aria-selected={formData.state === province}
+                                    whileHover={{ x: 5 }}
+                                    transition={{ duration: 0.2 }}
+                                  >
+                                    {province}
+                                  </motion.li>
+                                ))}
+                              </ul>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                      {errors.state && <p className="mt-1 text-sm text-red-500 error-message">{errors.state}</p>}
                     </div>
                     <div>
                       <label htmlFor="country" className="block text-sm font-medium text-primary mb-1">
                         Country
                       </label>
-                      <select
+                      <input
+                        type="text"
                         id="country"
                         name="country"
-                        value={formData.country}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-primary/20 rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
-                      >
-                        <option value="United States">United States</option>
-                        <option value="Canada">Canada</option>
-                        <option value="United Kingdom">United Kingdom</option>
-                        <option value="Australia">Australia</option>
-                        <option value="Germany">Germany</option>
-                        <option value="France">France</option>
-                        <option value="Japan">Japan</option>
-                      </select>
+                        value="Cambodia"
+                        readOnly
+                        className={`w-full px-3 py-2 border border-primary/20 rounded-md text-primary focus:outline-none focus:ring-2 focus:ring-primary/50 ${
+                          theme === "dark" ? "bg-primary/10" : "bg-primary/5"
+                        }`}
+                      />
                     </div>
                   </div>
                 </div>
@@ -481,9 +534,7 @@ export default function CheckoutPage() {
                               errors.cvv ? "border-red-500" : "border-primary/20"
                             } rounded-md bg-transparent text-primary focus:outline-none focus:ring-2 focus:ring-primary/50`}
                           />
-                          {errors.cvv && (
-                            <p className="mt-1 text-sm text-red-500 error-message">{errors.cvv}</p>
-                          )}
+                          {errors.cvv && <p className="mt-1 text-sm text-red-500 error-message">{errors.cvv}</p>}
                         </div>
                       </div>
                     </div>
@@ -500,7 +551,7 @@ export default function CheckoutPage() {
               </div>
 
               <div className="lg:hidden">
-                <OrderSummary 
+                <OrderSummary
                   cartItems={cartItems}
                   subtotal={subtotal}
                   tax={tax}
@@ -511,10 +562,7 @@ export default function CheckoutPage() {
               </div>
 
               <div className="flex justify-between items-center pt-6 border-t border-primary/10">
-                <Link
-                  to="/cart"
-                  className="text-accent hover:underline flex items-center"
-                >
+                <Link to="/cart" className="text-accent hover:underline flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5 mr-2"
@@ -534,9 +582,7 @@ export default function CheckoutPage() {
                 <motion.button
                   type="submit"
                   className={`py-3 px-6 rounded-md font-medium shadow-sm transition-all duration-300 ${
-                    theme === "dark"
-                      ? "bg-white text-black hover:bg-white/90"
-                      : "bg-black text-white hover:bg-black/90"
+                    theme === "dark" ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-black/90"
                   }`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -544,9 +590,25 @@ export default function CheckoutPage() {
                 >
                   {isProcessing ? (
                     <div className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
                       </svg>
                       Processing...
                     </div>
@@ -560,7 +622,7 @@ export default function CheckoutPage() {
 
           {/* Order Summary - Desktop */}
           <div className="hidden lg:block lg:col-span-4">
-            <OrderSummary 
+            <OrderSummary
               cartItems={cartItems}
               subtotal={subtotal}
               tax={tax}
@@ -572,7 +634,7 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 // Order Summary Component
@@ -580,16 +642,12 @@ function OrderSummary({ cartItems, subtotal, tax, shipping, total, isProcessing 
   return (
     <div className="border border-primary/10 rounded-lg overflow-hidden bg-primary/5 p-6 sticky top-24">
       <h2 className="text-xl font-bold text-primary mb-4">Order Summary</h2>
-      
+
       <div className="max-h-60 overflow-y-auto mb-4">
         {cartItems.map((item, index) => (
           <div key={index} className="flex items-center py-3 border-b border-primary/10 last:border-b-0">
             <div className="h-16 w-16 flex-shrink-0 rounded-md overflow-hidden border border-primary/10">
-              <img
-                src={item.imageSrc || "/placeholder.svg"}
-                alt={item.name}
-                className="h-full w-full object-cover"
-              />
+              <img src={item.imageSrc || "/placeholder.svg"} alt={item.name} className="h-full w-full object-cover" />
             </div>
             <div className="ml-4 flex-1">
               <h3 className="text-primary font-medium text-sm">{item.name}</h3>
@@ -601,7 +659,7 @@ function OrderSummary({ cartItems, subtotal, tax, shipping, total, isProcessing 
           </div>
         ))}
       </div>
-      
+
       <div className="space-y-3 mb-6">
         <div className="flex justify-between text-primary">
           <span>Subtotal</span>
@@ -622,7 +680,7 @@ function OrderSummary({ cartItems, subtotal, tax, shipping, total, isProcessing 
           </div>
         </div>
       </div>
-      
+
       <div className="text-center text-sm text-secondary">
         <p>Secure checkout powered by Stripe</p>
         <div className="flex justify-center space-x-2 mt-2">
@@ -634,7 +692,10 @@ function OrderSummary({ cartItems, subtotal, tax, shipping, total, isProcessing 
           </svg>
           <svg className="h-6 w-auto" viewBox="0 0 36 24" aria-hidden="true">
             <rect width="36" height="24" rx="4" fill="#252525" />
-            <path d="M18 19.5C21.5899 19.5 24.5 16.5899 24.5 13C24.5 9.41015 21.5899 6.5 18 6.5C14.4101 6.5 11.5 9.41015 11.5 13C11.5 16.5899 14.4101 19.5 18 19.5Z" fill="#EB001B" />
+            <path
+              d="M18 19.5C21.5899 19.5 24.5 16.5899 24.5 13C24.5 9.41015 21.5899 6.5 18 6.5C14.4101 6.5 11.5 9.41015 11.5 13C11.5 16.5899 14.4101 19.5 18 19.5Z"
+              fill="#EB001B"
+            />
             <path d="M18 19.5C21.5899 19.5 24.5 16.5899 24.5 13C24.5 9.41015 21.5899 6.5 18 6.5" fill="#F79E1B" />
           </svg>
           <svg className="h-6 w-auto" viewBox="0 0 36 24" aria-hidden="true">
@@ -644,5 +705,6 @@ function OrderSummary({ cartItems, subtotal, tax, shipping, total, isProcessing 
         </div>
       </div>
     </div>
-  );
+  )
 }
+
